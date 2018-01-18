@@ -43,7 +43,11 @@ public class DownloadSyndicationArtefact {
 
                 mojo.feedUrl = line.getOptionValue(FEED_URL_OPTION, DownloadSyndicationArtefactMojo.FEED_URL);
                 mojo.tokenUrl = line.getOptionValue(TOKEN_URL_OPTION, DownloadSyndicationArtefactMojo.TOKEN_URL);
-                mojo.outputDirectory = new File(line.getOptionValue(OUTPUT_DIRECTORY_OPTION));
+                if (line.hasOption(OUTPUT_DIRECTORY_OPTION)) {
+                    mojo.outputDirectory = new File(line.getOptionValue(OUTPUT_DIRECTORY_OPTION));
+                } else {
+                    mojo.outputDirectory = new File(System.getProperty("user.dir"));
+                }
                 Set<String> categories = new HashSet<>();
                 for (String category : line.getOptionValues(CATEGORY_OPTION)) {
                     categories.add(category);
@@ -125,7 +129,7 @@ public class DownloadSyndicationArtefact {
                 .desc(
                     "Client id from the client credentials to use when authenticating to download entries")
                 .hasArg()
-                .required(false)
+                .required(true)
                 .build());
 
         options.addOption(
@@ -134,7 +138,7 @@ public class DownloadSyndicationArtefact {
                 .desc(
                     "Secret for the client id specified from the client credentials to use when authenticating to download entries")
                 .hasArg()
-                .required(false)
+                .required(true)
                 .build());
         return options;
     }
