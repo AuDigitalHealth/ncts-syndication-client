@@ -103,7 +103,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>au.gov.healthterminologies.tools.syndication.DownloadSyndicationArtefact</mainClass>
+							<mainClass>com.github.dionmcm.ncts.syndication.DownloadSyndicationArtefact</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
