@@ -7,13 +7,14 @@ import java.util.Set;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Downloads the latest version of a syndication artefact
  */
-@Mojo(name = "download-syndication-artefact")
+@Mojo(name = "download-syndication-artefact", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class DownloadSyndicationArtefactMojo extends AbstractMojo {
     public static final String TOKEN_URL = "https://api.healthterminologies.gov.au/oauth2/token";
     public static final String FEED_URL = "https://api.healthterminologies.gov.au/syndication/v1/syndication.xml";
