@@ -65,6 +65,17 @@
 			<version>2.4</version>
 		</dependency>
 	</dependencies>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>3.5</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -179,6 +190,7 @@
 							</execution>
 						</executions>
 					</plugin>
+					
 				</plugins>
 			</build>
 		</profile>
