@@ -1,7 +1,9 @@
 package com.github.dionmcm.ncts.syndication.client;
 
 import java.io.File;
-import java.net.MalformedURLException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +14,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.maven.plugin.MojoExecutionException;
+import org.jdom2.JDOMException;
 
 /**
  * Command line executable class that downloads entries from the NCTS syndication feed based on the specified categories
@@ -29,8 +31,13 @@ public class DownloadSyndicationArtefact {
     private static final String TOKEN_URL_OPTION = "token";
     private static final String FEED_URL_OPTION = "feed";
 
-    public static void main(String[] args) throws MalformedURLException, MojoExecutionException {
-        DownloadSyndicationArtefactMojo mojo = new DownloadSyndicationArtefactMojo();
+    public static void main(String[] args) throws URISyntaxException, NoSuchAlgorithmException, JDOMException,
+            IOException, HashValidationFailureException {
+        String feedUrl, tokenUrl;
+        File outputDirectory;
+        Set<String> categories;
+        boolean latestOnly;
+        String clientId, clientSecret;
 
         CommandLineParser parser = new DefaultParser();
         Options options = getOptions();
@@ -41,23 +48,25 @@ public class DownloadSyndicationArtefact {
                 printHelp(options);
             } else {
 
-                mojo.feedUrl = line.getOptionValue(FEED_URL_OPTION, DownloadSyndicationArtefactMojo.FEED_URL);
-                mojo.tokenUrl = line.getOptionValue(TOKEN_URL_OPTION, DownloadSyndicationArtefactMojo.TOKEN_URL);
+                feedUrl = line.getOptionValue(FEED_URL_OPTION, SyndicationClient.FEED_URL);
+                tokenUrl = line.getOptionValue(TOKEN_URL_OPTION, SyndicationClient.TOKEN_URL);
                 if (line.hasOption(OUTPUT_DIRECTORY_OPTION)) {
-                    mojo.outputDirectory = new File(line.getOptionValue(OUTPUT_DIRECTORY_OPTION));
+                    outputDirectory = new File(line.getOptionValue(OUTPUT_DIRECTORY_OPTION));
                 } else {
-                    mojo.outputDirectory = new File(System.getProperty("user.dir"));
+                    outputDirectory = new File(System.getProperty("user.dir"));
                 }
-                Set<String> categories = new HashSet<>();
+                categories = new HashSet<>();
                 for (String category : line.getOptionValues(CATEGORY_OPTION)) {
                     categories.add(category);
                 }
-                mojo.categories = categories;
-                mojo.latestOnly = line.hasOption(LATEST_ONLY_OPTION);
-                mojo.clientId = line.getOptionValue(CLIENT_ID_OPTION);
-                mojo.clientSecret = line.getOptionValue(CLIENT_SECRET_OPTION);
+                latestOnly = line.hasOption(LATEST_ONLY_OPTION);
+                clientId = line.getOptionValue(CLIENT_ID_OPTION);
+                clientSecret = line.getOptionValue(CLIENT_SECRET_OPTION);
 
-                mojo.execute();
+                SyndicationClient client =
+                        new SyndicationClient(feedUrl, tokenUrl, outputDirectory, clientId, clientSecret);
+
+                client.download(categories, latestOnly);
             }
         } catch (ParseException exp) {
             System.err.println("Invalid arguments:" + exp.getMessage());

@@ -81,12 +81,15 @@ public class NctsFileDownloader {
      * @param outputDirectory the base directory to download to, the {@link Entry} will be downloaded to a directory
      *            named the same as the category the entry is in and the filename will be the same as the filename in
      *            the entry url
-     * @return true if the file was downloaded, false if it was skipped as already downloaded
+     * @return DownloadResult indicating the location of the downloaded file and whether it was downloaded or the
+     *         locally cached file was up to date already
      * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be loaded
      * @throws IOException if an error occurs reading the file from the URL or writing it to disk
+     * @throws HashValidationFailureException if the downloaded file's SHA256 doesn't match the hash specified in the
+     *             feed
      */
-    public boolean downloadEntry(Entry entry, File outputDirectory)
-            throws IOException, NoSuchAlgorithmException {
+    public DownloadResult downloadEntry(Entry entry, File outputDirectory)
+            throws IOException, NoSuchAlgorithmException, HashValidationFailureException {
         File out = getOutputFile(entry, outputDirectory);
         entry.setFile(out);
 
@@ -96,23 +99,24 @@ public class NctsFileDownloader {
                         + " but does not match feed entry sha256 and/or length - deleting file and redownloading it.");
                 out.delete();
                 downloadFile(entry, out);
-                return true;
+                return new DownloadResult(out, true);
             } else {
                 logger.info("File " + out.getAbsolutePath() + " exists for entry " + entry.getId()
                         + " with matching sha256 and length - skipping dowload.");
-                return false;
+                return new DownloadResult(out, false);
             }
         } else {
             logger.info("File " + out.getAbsolutePath() + " does not exists for entry " + entry.getId()
                     + " - starting download for new file.");
             downloadFile(entry, out);
-            return true;
+            return new DownloadResult(out, true);
         }
 
     }
 
     private void downloadFile(Entry entry, File out)
-            throws NoSuchAlgorithmException, IOException, FileNotFoundException, ClientProtocolException {
+            throws NoSuchAlgorithmException, IOException, FileNotFoundException, ClientProtocolException,
+            HashValidationFailureException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         HttpClientBuilder builder = HttpClients.custom();
         builder.addInterceptorFirst((HttpRequest request, HttpContext context) -> {
@@ -134,10 +138,8 @@ public class NctsFileDownloader {
         long length = out.length();
         if (!sha256AndLengthMatch(entry, length, downloadedFileSha256)) {
             out.delete();
-            throw new RuntimeException("File " + out.getAbsolutePath() + " with hash "
-                    + downloadedFileSha256 + " and length " + length
-                    + " once downloaded did not match the advertised hash " + entry.getSha256() + " and/or length "
-                    + entry.getLength() + ". Downloaded file deleted, process aborted.");
+            throw new HashValidationFailureException(out, downloadedFileSha256, length,
+                entry.getSha256(), entry.getLength());
         }
     }
 

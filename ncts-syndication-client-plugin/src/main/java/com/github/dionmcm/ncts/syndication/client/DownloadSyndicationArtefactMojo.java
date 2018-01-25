@@ -1,8 +1,6 @@
 package com.github.dionmcm.ncts.syndication.client;
 
 import java.io.File;
-import java.net.URI;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -43,20 +41,11 @@ public class DownloadSyndicationArtefactMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException {
         try {
-            NctsFeedReader feedReader = new NctsFeedReader(feedUrl);
-            NctsFileDownloader downloader = new NctsFileDownloader(new URI(tokenUrl), clientId, clientSecret);
 
-            Map<String, Set<Entry>> matchingEntries = feedReader.getMatchingEntries(categories, latestOnly);
+            SyndicationClient client =
+                    new SyndicationClient(feedUrl, tokenUrl, outputDirectory, clientId, clientSecret);
 
-            if (matchingEntries.isEmpty()) {
-                getLog().warn("No entries found to download for specified categories " + categories);
-            } else {
-                for (String category : matchingEntries.keySet()) {
-                    for (Entry entry : matchingEntries.get(category)) {
-                        downloader.downloadEntry(entry, outputDirectory);
-                    }
-                }
-            }
+            client.download(categories, latestOnly);
 
         } catch (Exception e) {
             throw new MojoExecutionException("Failed reading syndication feed", e);
