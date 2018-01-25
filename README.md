@@ -49,7 +49,11 @@ For convenience there is a SyndicationClient constructor that doesn't take the f
 An example use to download the latest SCT_RF2_FULL and all versions available for SCT_RF2_SNAPSHOT and SCT_RF2_DELTA categories is below.
 
 ```java
-SyndicationClient client = new SyndicationClient(new File("/path/to/syndication/download"), "insert client id", "insert client password");
+SyndicationClient client = new SyndicationClient(
+    new File("/path/to/syndication/download"), 
+    "insert client id", 
+    "insert client password");
+    
 client.download(false, "SCT_RF2_SNAPSHOT", "SCT_RF2_DELTA");
 client.downloadLatest("SCT_RF2_FULL");
 ```
