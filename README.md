@@ -31,11 +31,11 @@ For more information on the NCTS API security and an explanation of how to get y
 ## Using the client library
 The library can be downloaded from Maven Central as a dependency
 ```xml
-		<dependency>
-			<groupId>com.github.dionmcm</groupId>
-			<artifactId>ncts-syndication-client-library</artifactId>
-			<version>0.0.4</version>
-		</dependency>
+<dependency>
+    <groupId>com.github.dionmcm</groupId>
+    <artifactId>ncts-syndication-client-library</artifactId>
+    <version>0.0.4</version>
+</dependency>
 ```
 To use the client you first have to construct a SyndicationClient instance, and provide it
  - the feed URL
