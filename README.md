@@ -34,7 +34,7 @@ The library can be downloaded from Maven Central as a dependency
 <dependency>
     <groupId>com.github.dionmcm</groupId>
     <artifactId>ncts-syndication-client-library</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
 </dependency>
 ```
 To use the client you first have to construct a SyndicationClient instance, and provide it
@@ -72,7 +72,7 @@ A simple example is
     <plugin>
       <groupId>com.github.dionmcm</groupId>
       <artifactId>ncts-syndication-client</artifactId>
-      <version>0.0.4</version>
+      <version>0.0.5</version>
       <configuration>
         <outputDirectory>/tmp</outputDirectory>
         <categories>
@@ -94,7 +94,7 @@ For the complete parameter set as an example
     <plugin>
       <groupId>com.github.dionmcm</groupId>
       <artifactId>ncts-syndication-client</artifactId>
-      <version>0.0.4</version>
+      <version>0.0.5</version>
       <configuration>
         <synd.url>https://api.healthterminologies.gov.au/syndication/v1/syndication.xml</synd.url>
         <synd.token.url>https://api.healthterminologies.gov.au/oauth2/token</synd.token.url>
@@ -115,7 +115,7 @@ For the complete parameter set as an example
 ## Using the client from the command line
 The project produces a runnable JAR file you can run with
 ```
-java -jar ncts-syndication-client-0.0.3-jar-with-dependencies.jar 
+java -jar ncts-syndication-client-0.0.5-jar-with-dependencies.jar 
 ```
 The CLI version uses [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/) and generates help from the command line with the switch -? which is fairly self explanatory.
 ```
