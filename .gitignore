@@ -27,3 +27,7 @@ target/generated-sources/plugin/com/github/dionmcm/ncts/syndication/client/HelpM
 target/maven-archiver/pom.properties
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+pom.xml.versionsBackup
+ncts-syndication-client-cli/pom.xml.versionsBackup
+ncts-syndication-client-library/pom.xml.versionsBackup
+ncts-syndication-client-plugin/pom.xml.versionsBackup
