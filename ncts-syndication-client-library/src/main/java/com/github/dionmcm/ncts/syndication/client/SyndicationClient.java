@@ -66,11 +66,11 @@ public class SyndicationClient {
      * copy's SHA256 does not match the feed the item will be downloaded over the top of the existing local copy. SHA256
      * hashes are tested for each download and if they fail an exception is thrown and the client aborts.
      * 
+     * @param latestOnly if true only the latest artefact version from each specified category will be downloaded,
+     *            otherwise all artefacts for each category will be downloaded
      * @param categories syndication feed categories to download, refer to
      *            https://www.healthterminologies.gov.au/specs/v2/conformant-server-apps/syndication-api/syndication-
      *            feed
-     * @param latestOnly if true only the latest artefact version from each specified category will be downloaded,
-     *            otherwise all artefacts for each category will be downloaded
      * @return a Map containing all the requests categories and a List of {@link DownloadResult}s, one for each aretfact
      *         in the feed matching the categories provided and latestOnly setting
      * @throws JDOMException if the syndication feed cannot be parsed
@@ -79,12 +79,12 @@ public class SyndicationClient {
      * @throws HashValidationFailureException if the downloaded file's SHA256 doesn't match the hash specified in the
      *             feed
      */
-    public Map<String, List<DownloadResult>> download(Set<String> categories, boolean latestOnly)
+    public Map<String, List<DownloadResult>> download(boolean latestOnly, String... categories)
             throws JDOMException, IOException, NoSuchAlgorithmException, HashValidationFailureException {
         NctsFeedReader feedReader = new NctsFeedReader(feedUrl.toString());
         NctsFileDownloader downloader = new NctsFileDownloader(tokenUrl, clientId, clientSecret);
 
-        Map<String, Set<Entry>> matchingEntries = feedReader.getMatchingEntries(categories, latestOnly);
+        Map<String, Set<Entry>> matchingEntries = feedReader.getMatchingEntries(latestOnly, categories);
 
         Map<String, List<DownloadResult>> result = new HashMap<>();
         if (matchingEntries.isEmpty()) {
@@ -100,5 +100,58 @@ public class SyndicationClient {
         }
 
         return result;
+    }
+
+    /**
+     * Convenience method to download the latest file for the specified categories.
+     * <p>
+     * See {@link #download(boolean, String...)} for more details.
+     * 
+     * @param categories
+     * @return {@link Map} containing one {@link DownloadResult} for each specified category.
+     * @throws JDOMException if the syndication feed cannot be parsed
+     * @throws IOException if an error occurs trying to get the feed or its contents
+     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be loaded
+     * @throws HashValidationFailureException if the downloaded file's SHA256 doesn't match the hash specified in the
+     *             feed
+     */
+    public Map<String, DownloadResult> downloadLatestFromCategories(String... categories)
+            throws NoSuchAlgorithmException, JDOMException, IOException, HashValidationFailureException {
+        Map<String, DownloadResult> result = new HashMap<>();
+        Map<String, List<DownloadResult>> downloadResults = download(true, categories);
+        for (String category : downloadResults.keySet()) {
+            if (downloadResults.get(category).size() != 1) {
+                throw new RuntimeException("Expected only 1 result for category " + category + " but encountered "
+                        + downloadResults.get(category).size());
+            }
+
+            result.put(category, downloadResults.get(category).get(0));
+        }
+
+        return result;
+    }
+
+    /**
+     * Convenience method to download the latest file for the specified single category.
+     * <p>
+     * See {@link #download(boolean, String...)} for more details.
+     * 
+     * @param category
+     * @return a single {@link DownloadResult} for the requested latest file in the category
+     * @throws JDOMException if the syndication feed cannot be parsed
+     * @throws IOException if an error occurs trying to get the feed or its contents
+     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be loaded
+     * @throws HashValidationFailureException if the downloaded file's SHA256 doesn't match the hash specified in the
+     *             feed
+     */
+    public DownloadResult downloadLatest(String category)
+            throws NoSuchAlgorithmException, JDOMException, IOException, HashValidationFailureException {
+        Map<String, DownloadResult> downloadResults = downloadLatestFromCategories(category);
+        if (downloadResults.keySet().size() != 1 || !downloadResults.keySet().iterator().next().equals(category)) {
+            throw new RuntimeException("Expected only 1 category " + category + " but encountered "
+                    + downloadResults.keySet());
+        }
+
+        return downloadResults.get(category);
     }
 }

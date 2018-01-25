@@ -1,7 +1,6 @@
 package com.github.dionmcm.ncts.syndication.client;
 
 import java.io.File;
-import java.util.Set;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -27,7 +26,7 @@ public class DownloadSyndicationArtefactMojo extends AbstractMojo {
     File outputDirectory;
 
     @Parameter(required = true)
-    Set<String> categories;
+    String[] categories;
 
     @Parameter(defaultValue = "true")
     boolean latestOnly;
@@ -45,7 +44,7 @@ public class DownloadSyndicationArtefactMojo extends AbstractMojo {
             SyndicationClient client =
                     new SyndicationClient(feedUrl, tokenUrl, outputDirectory, clientId, clientSecret);
 
-            client.download(categories, latestOnly);
+            client.download(latestOnly, categories);
 
         } catch (Exception e) {
             throw new MojoExecutionException("Failed reading syndication feed", e);

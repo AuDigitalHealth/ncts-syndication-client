@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -35,7 +33,7 @@ public class DownloadSyndicationArtefact {
             IOException, HashValidationFailureException {
         String feedUrl, tokenUrl;
         File outputDirectory;
-        Set<String> categories;
+        String[] categories;
         boolean latestOnly;
         String clientId, clientSecret;
 
@@ -55,10 +53,7 @@ public class DownloadSyndicationArtefact {
                 } else {
                     outputDirectory = new File(System.getProperty("user.dir"));
                 }
-                categories = new HashSet<>();
-                for (String category : line.getOptionValues(CATEGORY_OPTION)) {
-                    categories.add(category);
-                }
+                categories = line.getOptionValues(CATEGORY_OPTION);
                 latestOnly = line.hasOption(LATEST_ONLY_OPTION);
                 clientId = line.getOptionValue(CLIENT_ID_OPTION);
                 clientSecret = line.getOptionValue(CLIENT_SECRET_OPTION);
@@ -66,7 +61,7 @@ public class DownloadSyndicationArtefact {
                 SyndicationClient client =
                         new SyndicationClient(feedUrl, tokenUrl, outputDirectory, clientId, clientSecret);
 
-                client.download(categories, latestOnly);
+                client.download(latestOnly, categories);
             }
         } catch (ParseException exp) {
             System.err.println("Invalid arguments:" + exp.getMessage());

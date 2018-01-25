@@ -80,7 +80,7 @@ public class NctsFeedReader {
      * @return {@link Entry} from the feed in the specified category with the biggest content item version
      */
     public Entry getLatestMatchingEntry(String category){
-        return getMatchingEntries(new HashSet<>(Arrays.asList(category)), true).get(category).iterator().next();
+        return getMatchingEntries(true, category).get(category).iterator().next();
     }
 
     /**
@@ -111,11 +111,12 @@ public class NctsFeedReader {
      *         matching {@link Entry} objects. Note that if a category is specified but does not occur in the feed
      *         content the category will not appear as a key in the returned map.
      */
-    public Map<String, Set<Entry>> getMatchingEntries(Set<String> categories, boolean latestOnly) {
+    public Map<String, Set<Entry>> getMatchingEntries(boolean latestOnly, String... categories) {
         Map<String, Set<Entry>> matchingEntries = new HashMap<>();
+        Set<String> categorySet = new HashSet<>(Arrays.asList(categories));
 
         for (String category : entries.keySet()) {
-            if (categories.contains(category)) {
+            if (categorySet.contains(category)) {
                 HashSet<Entry> set = new HashSet<>();
                 set.addAll(entries.get(category));
                 if (latestOnly) {
