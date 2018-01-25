@@ -3,7 +3,7 @@
 	<groupId>com.github.dionmcm</groupId>
 	<artifactId>ncts-syndication-client</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<name>NCTS Syndication Client Parent POM</name>
 	<description>Parent POM for Java library, Maven Mojo and CLI for downloading content from the National Clinical Terminology Service's syndication feed</description>
