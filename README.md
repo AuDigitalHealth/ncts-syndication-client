@@ -113,7 +113,7 @@ For the complete parameter set as an example
 ```
 
 ## Using the client from the command line
-The project produces a runnable JAR file you can run with
+The project produces a runnable JAR file you can [download from maven central here](https://search.maven.org/remotecontent?filepath=com/github/dionmcm/ncts-syndication-client-cli/0.0.5/ncts-syndication-client-cli-0.0.5-jar-with-dependencies.jar) and run with
 ```
 java -jar ncts-syndication-client-0.0.5-jar-with-dependencies.jar 
 ```
