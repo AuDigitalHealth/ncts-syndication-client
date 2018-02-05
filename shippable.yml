@@ -9,3 +9,6 @@ env:
 build:
   ci:
     - mvn -s settings.xml clean deploy
+  cache: true
+  cache_dir_list:
+    - ~/.m2
