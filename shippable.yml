@@ -3,6 +3,9 @@ language: java
 jdk:
   - oraclejdk8
 
+env:
+  - secure: VxZSmsWHFcRIUqLX5gPXxMjmTuPXv/T+Jz+5pqFsoTgmza+jq+3COKpvRXu9310uw5HGn7AivEvMBi/BVoO7UXd2fdEEfTRiAJ69hOfN2USQ0mzfcu9SFqv8FApPlIxQJW93oicMHqiMMwqY80iNH+DDYUr7eWCHoZoxN64fG/Wuo5I2b7D6Iu4VgWM3LVakvPT0nbqiEVZt4DUR/ORiWCkEX6HmldRKImNz9fql4A0dkOYGioXKCXVyXbvlrkamdmbZ+LJxn167IFqaRU5ed42g9taoTlp+lEAlv8C1k5OKgukBSpjaBxwg2Vo5GpGDTbfw+YLxVouJEaItIYAQzw==
+
 build:
   ci:
     - mvn -s settings.xml clean deploy
