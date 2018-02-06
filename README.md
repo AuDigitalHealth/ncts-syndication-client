@@ -1,5 +1,5 @@
 # Status
-<img src=https://upload.wikimedia.org/wikipedia/commons/b/b4/Pictograms-nps-misc-stay_back_from_edge-other.svg width="100" height="100">
+![](https://upload.wikimedia.org/wikipedia/commons/b/b4/Pictograms-nps-misc-stay_back_from_edge-other.svg)
 
 This project has no official status, no relationship to the official NCTS, and is currently untested and experimental!
 
