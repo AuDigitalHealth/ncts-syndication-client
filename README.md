@@ -1,3 +1,10 @@
+# Status
+![](https://upload.wikimedia.org/wikipedia/commons/b/b4/Pictograms-nps-misc-stay_back_from_edge-other.svg)
+
+This project has no official status, no relationship to the official NCTS, and is currently untested and experimental!
+
+The concepts it shows are interesting, but the software itself has not been formed into a product that should be used for any significance, which is reflected in its 0.0.x version. It may attain a 1.0.0 status later after sufficient feedback and testing. For now, it is a toy.
+
 # NCTS Syndication Client
 The National Clinical Terminology Service (NCTS) at https://www.healthterminologies.gov.au provides a syndication service based on W3C Atom allowing registered users to automate release file downloads.
 
