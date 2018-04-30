@@ -17,6 +17,9 @@ import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 
+import de.skuzzle.semantic.Version;
+import de.skuzzle.semantic.Version.VersionFormatException;
+
 /**
  * Class that reads an NCTS Atom feed and presents it as {@link Entry} objects organised by category.
  */
@@ -120,7 +123,7 @@ public class NctsFeedReader {
                 HashSet<Entry> set = new HashSet<>();
                 set.addAll(entries.get(category));
                 if (latestOnly) {
-                    set.retainAll(Arrays.asList(getMax(set)));
+                    set.retainAll(Arrays.asList(getLatestEntry(set)));
                 }
                 matchingEntries.put(category, set);
             }
@@ -129,13 +132,26 @@ public class NctsFeedReader {
         return matchingEntries;
     }
 
-    private Entry getMax(HashSet<Entry> set) {
+    private Entry getLatestEntry(HashSet<Entry> set) {
         return set.stream().max(new Comparator<Entry>() {
             @Override
             public int compare(Entry o1, Entry o2) {
-                return o1.getContentItemVersion().compareTo(o2.getContentItemVersion());
+                if (o1.getContentItemVersion().matches("\\d+") && o2.getContentItemVersion().matches("\\d+")) {
+                    return o1.getContentItemVersion().compareTo(o2.getContentItemVersion());
+                }
+
+                try {
+                    Version o1Version = Version.parseVersion(o1.getContentItemVersion());
+                    Version o2Version = Version.parseVersion(o2.getContentItemVersion());
+                    return o1Version.compareTo(o2Version);
+                } catch (VersionFormatException e) {
+                    throw new RuntimeException(
+                        "Latest entry cannot be determined, version strings for entries are not pure numbers"
+                                + " (string of digits) or semantic versioning. Entries were " + o1 + " and " + o2,
+                        e);
+                }
             }
-        }).get();
+        }).orElseThrow(() -> new RuntimeException("No latest entry for set " + set));
     }
 
     private Element getLink(Element entry) {
