@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import com.google.common.net.MediaType;
 
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.AssertJUnit;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -98,18 +99,15 @@ public class clientTest {
     		downloadedFiles.contains("blue2.r2")
     	);
     	
-
-    	/*
     	//assert files not missing from local directory
-    	assertFalse(
-    		Files.list(outDir.toPath())
-    			.map(file -> file.getFileName().toString())
-    			.noneMatch(fileName -> fileName.equals("blue1.r2") ||
-    									fileName.equals("blue2.r2"))
-    	);*/
+    	List<String> filesInClientFolder = Files.list(outDir.toPath())
+    										.map(file->file.getFileName().toString())
+    										.collect(Collectors.toList());
+    	assertTrue(
+    			filesInClientFolder.contains("blue1.r2") &&
+    			filesInClientFolder.contains("blue2.r2")
+    	);
     }
-    
-    
 
     @Test(priority = 2, groups = "downloading", enabled = true )
     public void downloadsLatestInCategory() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
@@ -130,6 +128,7 @@ public class clientTest {
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
     	Map<String, List<DownloadResult>> result = testClient.download(false, "SCT_RF2_PURPLE", "SCT_RF2_RED", "SCT_RF2_BLUE");
     	
+    	//collapse download results into 1 dimensional list
     	List<String> downloadedFiles = result.values().stream().flatMap(category -> category.stream())
     			.map(file -> file.getFile().getName())
     			.collect(Collectors.toList());
@@ -143,6 +142,18 @@ public class clientTest {
     			downloadedFiles.contains("blue1.r2") &&
     			downloadedFiles.contains("blue2.r2") 
         );
+    	
+    	//assert files not missing from local directory
+    	List<String> filesInClientFolder = Files.list(outDir.toPath())
+    										.map(file->file.getFileName().toString())
+    										.collect(Collectors.toList());
+    	assertTrue(
+    			filesInClientFolder.contains("purple1.r2") &&
+    			filesInClientFolder.contains("purple2.r2") &&
+    			filesInClientFolder.contains("red1.r2") &&
+    			filesInClientFolder.contains("blue1.r2") &&
+    			filesInClientFolder.contains("blue2.r2")
+    	);
     }
 
     
@@ -187,7 +198,7 @@ public class clientTest {
 				);
     }
     
-    @AfterMethod(alwaysRun=true)
+    @AfterMethod(alwaysRun=true) @BeforeMethod (alwaysRun=true)
     public void deleteAllFilesInClientFolder() throws IOException {
     	FileUtils.cleanDirectory(outDir); 
     }
@@ -196,9 +207,7 @@ public class clientTest {
     public void tearDownMockServer() {
         mockServer.stop();
     }
-    
- 
-    
+
     public static void main(String[] theArgs) throws Exception {
 
     }
