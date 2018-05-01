@@ -2,7 +2,7 @@
 <testng-results skipped="0" failed="0" ignored="0" total="4" passed="4">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="3067" started-at="2018-05-01T06:40:30Z" finished-at="2018-05-01T06:40:33Z">
+  <suite name="Default suite" duration-ms="3015" started-at="2018-05-01T06:52:06Z" finished-at="2018-05-01T06:52:09Z">
     <groups>
       <group name="downloading">
         <method signature="clientTest.downloadsAllFilesInCategory()[pri:1, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="downloadsAllFilesInCategory" class="com.github.dionmcm.ncts.syndication.client.clientTest"/>
@@ -11,29 +11,29 @@
         <method signature="clientTest.hashMismatchInSyndicationThrowsException()[pri:3, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="hashMismatchInSyndicationThrowsException" class="com.github.dionmcm.ncts.syndication.client.clientTest"/>
       </group> <!-- downloading -->
     </groups>
-    <test name="Default test" duration-ms="3067" started-at="2018-05-01T06:40:30Z" finished-at="2018-05-01T06:40:33Z">
+    <test name="Default test" duration-ms="3015" started-at="2018-05-01T06:52:06Z" finished-at="2018-05-01T06:52:09Z">
       <class name="com.github.dionmcm.ncts.syndication.client.clientTest">
-        <test-method status="PASS" signature="setUpMockServer()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="setUpMockServer" is-config="true" duration-ms="2007" started-at="2018-05-01T06:40:30Z" finished-at="2018-05-01T06:40:32Z">
+        <test-method status="PASS" signature="setUpMockServer()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="setUpMockServer" is-config="true" duration-ms="1972" started-at="2018-05-01T06:52:06Z" finished-at="2018-05-01T06:52:08Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setUpMockServer -->
-        <test-method status="PASS" signature="downloadsAllFilesInCategory()[pri:1, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="downloadsAllFilesInCategory" duration-ms="465" started-at="2018-05-01T06:40:32Z" finished-at="2018-05-01T06:40:33Z">
+        <test-method status="PASS" signature="downloadsAllFilesInCategory()[pri:1, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="downloadsAllFilesInCategory" duration-ms="452" started-at="2018-05-01T06:52:08Z" finished-at="2018-05-01T06:52:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- downloadsAllFilesInCategory -->
-        <test-method status="PASS" signature="deleteAllFilesInClientFolder()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="deleteAllFilesInClientFolder" is-config="true" duration-ms="5" started-at="2018-05-01T06:40:33Z" finished-at="2018-05-01T06:40:33Z">
+        <test-method status="PASS" signature="deleteAllFilesInClientFolder()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="deleteAllFilesInClientFolder" is-config="true" duration-ms="4" started-at="2018-05-01T06:52:09Z" finished-at="2018-05-01T06:52:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- deleteAllFilesInClientFolder -->
-        <test-method status="PASS" signature="downloadsLatestInCategory()[pri:2, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="downloadsLatestInCategory" duration-ms="49" started-at="2018-05-01T06:40:33Z" finished-at="2018-05-01T06:40:33Z">
+        <test-method status="PASS" signature="downloadsLatestInCategory()[pri:2, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="downloadsLatestInCategory" duration-ms="48" started-at="2018-05-01T06:52:09Z" finished-at="2018-05-01T06:52:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- downloadsLatestInCategory -->
-        <test-method status="PASS" signature="deleteAllFilesInClientFolder()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="deleteAllFilesInClientFolder" is-config="true" duration-ms="1" started-at="2018-05-01T06:40:33Z" finished-at="2018-05-01T06:40:33Z">
+        <test-method status="PASS" signature="deleteAllFilesInClientFolder()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="deleteAllFilesInClientFolder" is-config="true" duration-ms="1" started-at="2018-05-01T06:52:09Z" finished-at="2018-05-01T06:52:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- deleteAllFilesInClientFolder -->
-        <test-method status="PASS" signature="hashMismatchInSyndicationThrowsException()[pri:3, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="hashMismatchInSyndicationThrowsException" duration-ms="53" started-at="2018-05-01T06:40:33Z" finished-at="2018-05-01T06:40:33Z">
+        <test-method status="PASS" signature="hashMismatchInSyndicationThrowsException()[pri:3, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="hashMismatchInSyndicationThrowsException" duration-ms="46" started-at="2018-05-01T06:52:09Z" finished-at="2018-05-01T06:52:09Z">
           <exception class="com.github.dionmcm.ncts.syndication.client.HashValidationFailureException">
             <message>
               <![CDATA[File /Users/patrick/git/ncts-syndication-client/ncts-syndication-client-library/src/test/java/com/github/dionmcm/ncts/syndication/client/Test_Client/green1.r2 with hash 63640264849a87c90356129d99ea165e37aa5fabc1fea46906df1a7ca50db492 and length 11 once downloaded did not match the advertised hash thisHashIsIncorrect and/or length 11. Downloaded file deleted, process aborted.]]>
@@ -45,7 +45,7 @@ at com.github.dionmcm.ncts.syndication.client.NctsFileDownloader.downloadEntry(N
 at com.github.dionmcm.ncts.syndication.client.SyndicationClient.download(SyndicationClient.java:96)
 at com.github.dionmcm.ncts.syndication.client.SyndicationClient.downloadLatestFromCategories(SyndicationClient.java:121)
 at com.github.dionmcm.ncts.syndication.client.SyndicationClient.downloadLatest(SyndicationClient.java:149)
-at com.github.dionmcm.ncts.syndication.client.clientTest.hashMismatchInSyndicationThrowsException(clientTest.java:121)
+at com.github.dionmcm.ncts.syndication.client.clientTest.hashMismatchInSyndicationThrowsException(clientTest.java:124)
 at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -77,19 +77,19 @@ at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
           <reporter-output>
           </reporter-output>
         </test-method> <!-- hashMismatchInSyndicationThrowsException -->
-        <test-method status="PASS" signature="deleteAllFilesInClientFolder()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="deleteAllFilesInClientFolder" is-config="true" duration-ms="0" started-at="2018-05-01T06:40:33Z" finished-at="2018-05-01T06:40:33Z">
-          <reporter-output>
-          </reporter-output>
-        </test-method> <!-- deleteAllFilesInClientFolder -->
-        <test-method status="PASS" signature="downloadsFilesFromMultipleCategories()[pri:4, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="downloadsFilesFromMultipleCategories" duration-ms="138" started-at="2018-05-01T06:40:33Z" finished-at="2018-05-01T06:40:33Z">
+        <test-method status="PASS" signature="downloadsFilesFromMultipleCategories()[pri:4, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="downloadsFilesFromMultipleCategories" duration-ms="142" started-at="2018-05-01T06:52:09Z" finished-at="2018-05-01T06:52:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- downloadsFilesFromMultipleCategories -->
-        <test-method status="PASS" signature="deleteAllFilesInClientFolder()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="deleteAllFilesInClientFolder" is-config="true" duration-ms="1" started-at="2018-05-01T06:40:33Z" finished-at="2018-05-01T06:40:33Z">
+        <test-method status="PASS" signature="deleteAllFilesInClientFolder()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="deleteAllFilesInClientFolder" is-config="true" duration-ms="0" started-at="2018-05-01T06:52:09Z" finished-at="2018-05-01T06:52:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- deleteAllFilesInClientFolder -->
-        <test-method status="PASS" signature="tearDownMockServer()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="tearDownMockServer" is-config="true" duration-ms="324" started-at="2018-05-01T06:40:33Z" finished-at="2018-05-01T06:40:33Z">
+        <test-method status="PASS" signature="deleteAllFilesInClientFolder()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="deleteAllFilesInClientFolder" is-config="true" duration-ms="1" started-at="2018-05-01T06:52:09Z" finished-at="2018-05-01T06:52:09Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- deleteAllFilesInClientFolder -->
+        <test-method status="PASS" signature="tearDownMockServer()[pri:0, instance:com.github.dionmcm.ncts.syndication.client.clientTest@498d318c]" name="tearDownMockServer" is-config="true" duration-ms="325" started-at="2018-05-01T06:52:09Z" finished-at="2018-05-01T06:52:09Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- tearDownMockServer -->

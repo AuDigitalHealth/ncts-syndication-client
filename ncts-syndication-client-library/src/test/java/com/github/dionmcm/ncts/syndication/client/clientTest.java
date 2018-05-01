@@ -90,11 +90,14 @@ public class clientTest {
     									.map(file -> file.getFile().getName())
     									.collect(Collectors.toList());
     	
+    	assertTrue(downloadedFiles.size() == 2);
+    	
     	//assert that all blue results in list
     	assertTrue(
     		downloadedFiles.contains("blue1.r2") &&
     		downloadedFiles.contains("blue2.r2")
     	);
+    	
 
     	/*
     	//assert files not missing from local directory
@@ -119,6 +122,7 @@ public class clientTest {
     public void hashMismatchInSyndicationThrowsException() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException{
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
     	DownloadResult result = testClient.downloadLatest("SCT_RF2_GREEN");
+    	//Throw HashValidationFailureException
     }
     
     @Test(priority = 4, groups = "downloading", enabled = true )
@@ -129,6 +133,8 @@ public class clientTest {
     	List<String> downloadedFiles = result.values().stream().flatMap(category -> category.stream())
     			.map(file -> file.getFile().getName())
     			.collect(Collectors.toList());
+    	
+    	assertTrue(downloadedFiles.size() == 5);
     	    	
     	assertTrue(
     			downloadedFiles.contains("purple1.r2") &&

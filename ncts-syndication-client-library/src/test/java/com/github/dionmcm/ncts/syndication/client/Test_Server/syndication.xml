@@ -91,6 +91,9 @@
     <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
   </entry>
 
+
+<!-- This is the latest version of purple, as can be seen in the <ncts:contentItemVersion> tag -->
+
   <entry>
     <title>SNOMED CT-AU 30 November 2017 (RF2 FULL)</title>
     <link rel="alternate" type="application/text" href="http://localhost:1080/purple2.r2" length="11" ncts:sha256Hash="63640264849a87c90356129d99ea165e37aa5fabc1fea46906df1a7ca50db492" />
@@ -108,6 +111,8 @@
     <ncts:contentItemIdentifier>http://snomed.info/sct/32506021000036107</ncts:contentItemIdentifier>
     <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171231</ncts:contentItemVersion>
   </entry>
+
+<!-- The hash advertised for green1 doesn't match its true hash -->
 
   <entry>
     <title>SNOMED CT-AU 30 November 2017 (RF2 FULL)</title>
