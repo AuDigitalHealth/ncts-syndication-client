@@ -31,11 +31,13 @@ public class DownloadSyndicationArtefact {
 
     public static void main(String[] args) throws URISyntaxException, NoSuchAlgorithmException, JDOMException,
             IOException, HashValidationFailureException {
-        String feedUrl, tokenUrl;
+        String feedUrl;
+        String tokenUrl;
         File outputDirectory;
         String[] categories;
         boolean latestOnly;
-        String clientId, clientSecret;
+        String clientId;
+        String clientSecret;
 
         CommandLineParser parser = new DefaultParser();
         Options options = getOptions();

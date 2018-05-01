@@ -6,14 +6,14 @@ import java.io.File;
  * Class that encapsulates the information about an entry in the NCTS syndication feed
  */
 public class Entry {
-    private String id;
-    private String sha256;
-    private String url;
-    private long length;
-    private String contentItemIdentifier;
-    private String contentItemVersion;
-    private String category;
-    private String categoryScheme;
+    private final String id;
+    private final String sha256;
+    private final String url;
+    private final long length;
+    private final String contentItemIdentifier;
+    private final String contentItemVersion;
+    private final String category;
+    private final String categoryScheme;
 
     private File file;
 

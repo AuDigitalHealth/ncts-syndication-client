@@ -18,7 +18,7 @@ import org.jdom2.JDOMException;
  * Downloads the latest version of a syndication artefact
  */
 public class SyndicationClient {
-    public static Logger logger = Logger.getLogger(SyndicationClient.class.getName());
+    private static final Logger logger = Logger.getLogger(SyndicationClient.class.getName());
     public static final String TOKEN_URL = "https://api.healthterminologies.gov.au/oauth2/token";
     public static final String FEED_URL = "https://api.healthterminologies.gov.au/syndication/v1/syndication.xml";
 

@@ -24,7 +24,7 @@ import de.skuzzle.semantic.Version.VersionFormatException;
  * Class that reads an NCTS Atom feed and presents it as {@link Entry} objects organised by category.
  */
 public class NctsFeedReader {
-    private static Logger logger = Logger.getLogger(NctsFeedReader.class.getName());
+    private static final Logger logger = Logger.getLogger(NctsFeedReader.class.getName());
     private static final Namespace NCTS_NAMESPACE = Namespace
         .getNamespace("http://ns.electronichealth.net.au/ncts/syndication/asf/extensions/1.0.0");
     private static final Namespace ATOM_NAMESPACE = Namespace.getNamespace("http://www.w3.org/2005/Atom");

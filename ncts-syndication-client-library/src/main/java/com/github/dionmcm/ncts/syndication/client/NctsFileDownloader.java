@@ -3,7 +3,6 @@ package com.github.dionmcm.ncts.syndication.client;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +22,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpRequest;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -45,7 +43,7 @@ import com.google.gson.reflect.TypeToken;
  */
 public class NctsFileDownloader {
 
-    private static Logger logger = Logger.getLogger(NctsFileDownloader.class.getName());
+    private static final Logger logger = Logger.getLogger(NctsFileDownloader.class.getName());
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -97,7 +95,10 @@ public class NctsFileDownloader {
             if (!sha256AndLengthMatch(entry, out)) {
                 logger.warning("File " + out.getAbsolutePath() + " exists for entry " + entry.getId()
                         + " but does not match feed entry sha256 and/or length - deleting file and redownloading it.");
-                out.delete();
+                if (!out.delete()) {
+                    throw new RuntimeException("Unable to delete existing cached file " + out.getAbsolutePath()
+                            + " whose sha256 doesn't match the feed. Unable to redownload the file with the corrected sha256");
+                }
                 downloadFile(entry, out);
                 return new DownloadResult(out, true);
             } else {
@@ -115,8 +116,7 @@ public class NctsFileDownloader {
     }
 
     private void downloadFile(Entry entry, File out)
-            throws NoSuchAlgorithmException, IOException, FileNotFoundException, ClientProtocolException,
-            HashValidationFailureException {
+            throws NoSuchAlgorithmException, IOException, HashValidationFailureException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         HttpClientBuilder builder = HttpClients.custom();
         builder.addInterceptorFirst((HttpRequest request, HttpContext context) -> {
@@ -137,7 +137,10 @@ public class NctsFileDownloader {
 
         long length = out.length();
         if (!sha256AndLengthMatch(entry, length, downloadedFileSha256)) {
-            out.delete();
+            if (!out.delete()) {
+                logger.warning("Unable to delete downloaded file " + out.getAbsolutePath()
+                        + " whose sha256 doesn't match the feed.");
+            }
             throw new HashValidationFailureException(out, downloadedFileSha256, length,
                 entry.getSha256(), entry.getLength());
         }
@@ -150,7 +153,7 @@ public class NctsFileDownloader {
         return out;
     }
 
-    private boolean sha256AndLengthMatch(Entry entry, File out) throws IOException, FileNotFoundException {
+    private boolean sha256AndLengthMatch(Entry entry, File out) throws IOException {
         String existingSha256;
         try (
                 FileInputStream fis = new FileInputStream(out)) {
