@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:ncts="http://ns.electronichealth.net.au/ncts/syndication/asf/extensions/1.0.0">
+  <title>National Clinical Terminology Service Syndication Feed</title>
+  <link rel="alternate" type="application/atom+xml" href="https://api.healthterminologies.gov.au/syndication/v1/syndication.xml" />
+  <id>urn:uuid:e39958d4-380e-4252-8707-6afeff8b7911</id>
+  <generator>Australian Digital Health Agency</generator>
+  <updated>2018-04-19T06:50:11Z</updated>
+  <ncts:atomSyndicationFormatProfile>http://ns.electronichealth.net.au/ncts/syndication/asf/profile/1.0.0</ncts:atomSyndicationFormatProfile>
+
+
+
+  <entry>
+    <title>SNOMED CT-AU 30 November 2017 (RF2 FULL)</title>
+    <link rel="alternate" type="application/text" href="http://localhost:1080/blue1.r2" length="11" ncts:sha256Hash="63640264849a87c90356129d99ea165e37aa5fabc1fea46906df1a7ca50db492" />
+    <category term="SCT_RF2_BLUE" label="SNOMED CT RF2 Blue" scheme="http://ns.electronichealth.net.au/ncts/syndication/asf/scheme/1.0.0" />
+    <author>
+      <name>Australian Digital Health Agency</name>
+      <uri>http://www.digitalhealth.gov.au</uri>
+      <email>help@digitalhealth.gov.au</email>
+    </author>
+    <id>urn:uuid:4b67ba14-f950-34e0-b3f9-0294821894ed</id>
+    <rights>Copyright 2017 Australian Digital Health Agency. This content contains information which is protected by copyright. All Rights Reserved. No part of this work may be reproduced or used in any form or by any means - graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems - without the permission of the Australian Digital Health Agency. IHTSDO (SNOMED CT) This material includes SNOMED Clinical Terms (TM) (SNOMED CT (R)) which is used by permission of the International Health Terminology Standards Development Organisation (IHTSDO). All rights reserved. SNOMED CT (R) was originally created by The College of American Pathologists. "SNOMED" and "SNOMED CT" are registered trademarks of the IHTSDO, (http://www.ihtsdo.org/).</rights>
+    <updated>2017-11-16T00:25:01Z</updated>
+    <published>2017-11-16T00:25:01Z</published>
+    <summary>SNOMED CT-AU is the Australian extension to the Systematized Nomenclature of Medicine, Clinical Terms (SNOMED CT), incorporating all Australian-developed terminology including the Australian Medicines Terminology (AMT) along with the core international data. SNOMED CT-AU provides local variations and customisations of terms relevant to the Australian healthcare sector for implementation in Australian clinical IT systems.</summary>
+    <ncts:contentItemIdentifier>http://snomed.info/sct/32506021000036107</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
+  </entry>
+
+
+  <entry>
+    <title>SNOMED CT-AU 30 November 2017 (RF2 FULL)</title>
+    <link rel="alternate" type="application/text" href="http://localhost:1080/blue2.r2" length="11" ncts:sha256Hash="63640264849a87c90356129d99ea165e37aa5fabc1fea46906df1a7ca50db492" />
+    <category term="SCT_RF2_BLUE" label="SNOMED CT RF2 Blue" scheme="http://ns.electronichealth.net.au/ncts/syndication/asf/scheme/1.0.0" />
+    <author>
+      <name>Australian Digital Health Agency</name>
+      <uri>http://www.digitalhealth.gov.au</uri>
+      <email>help@digitalhealth.gov.au</email>
+    </author>
+    <id>urn:uuid:4b67ba14-f950-34e0-b3f9-0294821894ed</id>
+    <rights>Copyright 2017 Australian Digital Health Agency. This content contains information which is protected by copyright. All Rights Reserved. No part of this work may be reproduced or used in any form or by any means - graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems - without the permission of the Australian Digital Health Agency. IHTSDO (SNOMED CT) This material includes SNOMED Clinical Terms (TM) (SNOMED CT (R)) which is used by permission of the International Health Terminology Standards Development Organisation (IHTSDO). All rights reserved. SNOMED CT (R) was originally created by The College of American Pathologists. "SNOMED" and "SNOMED CT" are registered trademarks of the IHTSDO, (http://www.ihtsdo.org/).</rights>
+    <updated>2017-11-16T00:25:01Z</updated>
+    <published>2017-11-16T00:25:01Z</published>
+    <summary>SNOMED CT-AU is the Australian extension to the Systematized Nomenclature of Medicine, Clinical Terms (SNOMED CT), incorporating all Australian-developed terminology including the Australian Medicines Terminology (AMT) along with the core international data. SNOMED CT-AU provides local variations and customisations of terms relevant to the Australian healthcare sector for implementation in Australian clinical IT systems.</summary>
+    <ncts:contentItemIdentifier>http://snomed.info/sct/32506021000036107</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
+  </entry>
+
+  <entry>
+    <title>SNOMED CT-AU 30 November 2017 (RF2 FULL)</title>
+    <link rel="alternate" type="application/text" href="http://localhost:1080/red1.r2" length="11" ncts:sha256Hash="63640264849a87c90356129d99ea165e37aa5fabc1fea46906df1a7ca50db492" />
+    <category term="SCT_RF2_RED" label="SNOMED CT RF2 Blue" scheme="http://ns.electronichealth.net.au/ncts/syndication/asf/scheme/1.0.0" />
+    <author>
+      <name>Australian Digital Health Agency</name>
+      <uri>http://www.digitalhealth.gov.au</uri>
+      <email>help@digitalhealth.gov.au</email>
+    </author>
+    <id>urn:uuid:4b67ba14-f950-34e0-b3f9-0294821894ed</id>
+    <rights>Copyright 2017 Australian Digital Health Agency. This content contains information which is protected by copyright. All Rights Reserved. No part of this work may be reproduced or used in any form or by any means - graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems - without the permission of the Australian Digital Health Agency. IHTSDO (SNOMED CT) This material includes SNOMED Clinical Terms (TM) (SNOMED CT (R)) which is used by permission of the International Health Terminology Standards Development Organisation (IHTSDO). All rights reserved. SNOMED CT (R) was originally created by The College of American Pathologists. "SNOMED" and "SNOMED CT" are registered trademarks of the IHTSDO, (http://www.ihtsdo.org/).</rights>
+    <updated>2017-11-16T00:25:01Z</updated>
+    <published>2017-11-16T00:25:01Z</published>
+    <summary>SNOMED CT-AU is the Australian extension to the Systematized Nomenclature of Medicine, Clinical Terms (SNOMED CT), incorporating all Australian-developed terminology including the Australian Medicines Terminology (AMT) along with the core international data. SNOMED CT-AU provides local variations and customisations of terms relevant to the Australian healthcare sector for implementation in Australian clinical IT systems.</summary>
+    <ncts:contentItemIdentifier>http://snomed.info/sct/32506021000036107</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
+  </entry>
+
+
+  <entry>
+    <title>SNOMED CT-AU 30 November 2018 (RF2 FULL)</title>
+    <link rel="alternate" type="application/text" href="http://localhost:1080/purple1.r2" length="11" ncts:sha256Hash="63640264849a87c90356129d99ea165e37aa5fabc1fea46906df1a7ca50db492" />
+    <category term="SCT_RF2_PURPLE" label="SNOMED CT RF2 Blue" scheme="http://ns.electronichealth.net.au/ncts/syndication/asf/scheme/1.0.0" />
+    <author>
+      <name>Australian Digital Health Agency</name>
+      <uri>http://www.digitalhealth.gov.au</uri>
+      <email>help@digitalhealth.gov.au</email>
+    </author>
+    <id>urn:uuid:4b67ba14-f950-34e0-b3f9-0294821894ed</id>
+    <rights>Copyright 2017 Australian Digital Health Agency. This content contains information which is protected by copyright. All Rights Reserved. No part of this work may be reproduced or used in any form or by any means - graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems - without the permission of the Australian Digital Health Agency. IHTSDO (SNOMED CT) This material includes SNOMED Clinical Terms (TM) (SNOMED CT (R)) which is used by permission of the International Health Terminology Standards Development Organisation (IHTSDO). All rights reserved. SNOMED CT (R) was originally created by The College of American Pathologists. "SNOMED" and "SNOMED CT" are registered trademarks of the IHTSDO, (http://www.ihtsdo.org/).</rights>
+    <updated>2018-11-16T00:25:01Z</updated>
+    <published>2018-11-16T00:25:01Z</published>
+    <summary>SNOMED CT-AU is the Australian extension to the Systematized Nomenclature of Medicine, Clinical Terms (SNOMED CT), incorporating all Australian-developed terminology including the Australian Medicines Terminology (AMT) along with the core international data. SNOMED CT-AU provides local variations and customisations of terms relevant to the Australian healthcare sector for implementation in Australian clinical IT systems.</summary>
+    <ncts:contentItemIdentifier>http://snomed.info/sct/32506021000036107</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
+  </entry>
+
+  <entry>
+    <title>SNOMED CT-AU 30 November 2017 (RF2 FULL)</title>
+    <link rel="alternate" type="application/text" href="http://localhost:1080/purple2.r2" length="11" ncts:sha256Hash="63640264849a87c90356129d99ea165e37aa5fabc1fea46906df1a7ca50db492" />
+    <category term="SCT_RF2_PURPLE" label="SNOMED CT RF2 Blue" scheme="http://ns.electronichealth.net.au/ncts/syndication/asf/scheme/1.0.0" />
+    <author>
+      <name>Australian Digital Health Agency</name>
+      <uri>http://www.digitalhealth.gov.au</uri>
+      <email>help@digitalhealth.gov.au</email>
+    </author>
+    <id>urn:uuid:4b67ba14-f950-34e0-b3f9-0294821894ed</id>
+    <rights>Copyright 2017 Australian Digital Health Agency. This content contains information which is protected by copyright. All Rights Reserved. No part of this work may be reproduced or used in any form or by any means - graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems - without the permission of the Australian Digital Health Agency. IHTSDO (SNOMED CT) This material includes SNOMED Clinical Terms (TM) (SNOMED CT (R)) which is used by permission of the International Health Terminology Standards Development Organisation (IHTSDO). All rights reserved. SNOMED CT (R) was originally created by The College of American Pathologists. "SNOMED" and "SNOMED CT" are registered trademarks of the IHTSDO, (http://www.ihtsdo.org/).</rights>
+    <updated>2017-11-16T00:25:01Z</updated>
+    <published>2017-11-16T00:25:01Z</published>
+    <summary>SNOMED CT-AU is the Australian extension to the Systematized Nomenclature of Medicine, Clinical Terms (SNOMED CT), incorporating all Australian-developed terminology including the Australian Medicines Terminology (AMT) along with the core international data. SNOMED CT-AU provides local variations and customisations of terms relevant to the Australian healthcare sector for implementation in Australian clinical IT systems.</summary>
+    <ncts:contentItemIdentifier>http://snomed.info/sct/32506021000036107</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
+  </entry>
+
+  <entry>
+    <title>SNOMED CT-AU 30 November 2017 (RF2 FULL)</title>
+    <link rel="alternate" type="application/text" href="http://localhost:1080/green1.r2" length="11" ncts:sha256Hash="thisHashIsIncorrect" />
+    <category term="SCT_RF2_GREEN" label="SNOMED CT RF2 Blue" scheme="http://ns.electronichealth.net.au/ncts/syndication/asf/scheme/1.0.0" />
+    <author>
+      <name>Australian Digital Health Agency</name>
+      <uri>http://www.digitalhealth.gov.au</uri>
+      <email>help@digitalhealth.gov.au</email>
+    </author>
+    <id>urn:uuid:4b67ba14-f950-34e0-b3f9-0294821894ed</id>
+    <rights>Copyright 2017 Australian Digital Health Agency. This content contains information which is protected by copyright. All Rights Reserved. No part of this work may be reproduced or used in any form or by any means - graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems - without the permission of the Australian Digital Health Agency. IHTSDO (SNOMED CT) This material includes SNOMED Clinical Terms (TM) (SNOMED CT (R)) which is used by permission of the International Health Terminology Standards Development Organisation (IHTSDO). All rights reserved. SNOMED CT (R) was originally created by The College of American Pathologists. "SNOMED" and "SNOMED CT" are registered trademarks of the IHTSDO, (http://www.ihtsdo.org/).</rights>
+    <updated>2017-11-16T00:25:01Z</updated>
+    <published>2017-11-16T00:25:01Z</published>
+    <summary>SNOMED CT-AU is the Australian extension to the Systematized Nomenclature of Medicine, Clinical Terms (SNOMED CT), incorporating all Australian-developed terminology including the Australian Medicines Terminology (AMT) along with the core international data. SNOMED CT-AU provides local variations and customisations of terms relevant to the Australian healthcare sector for implementation in Australian clinical IT systems.</summary>
+    <ncts:contentItemIdentifier>http://snomed.info/sct/32506021000036107</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
+  </entry>
+
+
+
+
+</feed>
