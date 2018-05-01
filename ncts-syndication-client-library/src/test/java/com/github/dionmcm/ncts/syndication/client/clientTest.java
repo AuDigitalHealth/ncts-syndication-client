@@ -114,6 +114,13 @@ public class clientTest {
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
     	DownloadResult result = testClient.downloadLatest("SCT_RF2_PURPLE");
     	assertTrue(result.getFile().getName().equals("purple2.r2"));
+    	
+    	List<String> filesInClientFolder = Files.list(outDir.toPath())
+				.map(file->file.getFileName().toString())
+				.collect(Collectors.toList());
+		assertTrue(
+				filesInClientFolder.contains("purple2.r2")
+		);
     }
     
     @Test(priority = 3, groups = "downloading", enabled = true, expectedExceptions = HashValidationFailureException.class)
