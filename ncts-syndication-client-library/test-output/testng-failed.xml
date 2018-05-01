@@ -8,7 +8,7 @@
           <include name="setUpMockServer"/>
           <include name="deleteAllFilesInClientFolder"/>
           <include name="tearDownMockServer"/>
-          <include name="downloadsLatestInCategory"/>
+          <include name="downloadsAllFilesInCategory"/>
         </methods>
       </class> <!-- com.github.dionmcm.ncts.syndication.client.clientTest -->
     </classes>
