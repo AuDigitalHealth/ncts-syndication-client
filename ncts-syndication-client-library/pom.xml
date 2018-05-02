@@ -50,6 +50,12 @@
 			<version>5.3.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -62,24 +68,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			
-			<plugin>
-    <artifactId>maven-clean-plugin</artifactId>
-    <version>3.1.0</version>
-    <configuration>
-      <filesets>
-        <fileset>
-          <directory>src/test/java/com/github/dionmcm/ncts/syndication/client/Test_Client</directory>
-          <includes>
-            <include>*</include>
-          </includes>
-          <followSymlinks>false</followSymlinks>
-        </fileset>
-      </filesets>
-    </configuration>
-  </plugin>
-			
-			
 		</plugins>
 	</build>
 

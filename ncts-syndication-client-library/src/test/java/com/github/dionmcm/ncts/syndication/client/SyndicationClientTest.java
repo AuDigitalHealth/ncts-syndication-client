@@ -1,49 +1,23 @@
 package com.github.dionmcm.ncts.syndication.client;
 
-
-import org.testng.annotations.Test;
-
-import com.google.common.net.MediaType;
-
-import org.testng.annotations.BeforeClass;
-import org.testng.AssertJUnit;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotEquals;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.jdom2.JDOMException;
-import org.junit.Rule;
-import org.mockserver.client.*;
 import org.mockserver.client.server.MockServerClient;
-import org.mockserver.integration.ClientAndProxy;
 import org.mockserver.integration.ClientAndServer;
-import org.mockserver.junit.MockServerRule;
-import org.mockserver.model.ConnectionOptions;
-import org.mockserver.model.Header;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.testng.annotations.AfterClass;
@@ -51,19 +25,14 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.mockserver.integration.ClientAndProxy.startClientAndProxy;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-
-
-
-public class clientTest {
+public class SyndicationClientTest {
 	
 	SyndicationClient testClient;
 	String feedURL = "http://localhost:1080/syndication.xml";
 	String tokenURL = "http://localhost:1080/mockToken";
 	String clientID = "test";
 	String secret = "test";
-	File outDir = new File("src/test/java/com/github/dionmcm/ncts/syndication/client/Test_Client");
+    File outDir = new File("target/client-output");
 
 	private ClientAndServer mockServer;
 	private MockServerClient mockServerClient;
@@ -75,7 +44,7 @@ public class clientTest {
 			"purple2.r2",
 			"green1.r2"
 	};
-	String serverDir = "src/test/java/com/github/dionmcm/ncts/syndication/client/Test_Server/";
+    String serverDir = "target/test-classes/";
 
 	
     @Test(priority = 1, groups = "downloading", enabled = true)
@@ -149,6 +118,7 @@ public class clientTest {
     @BeforeClass
     public void setUpMockServer() throws IOException
     {
+        outDir.mkdirs();
     	//Begin mock server and request handler
     	mockServer = startClientAndServer(1080);
     	mockServerClient = new MockServerClient("localhost", 1080);
@@ -197,11 +167,5 @@ public class clientTest {
         mockServer.stop();
     }
     
- 
-    
-    public static void main(String[] theArgs) throws Exception {
-
-    }
-
 }
 
