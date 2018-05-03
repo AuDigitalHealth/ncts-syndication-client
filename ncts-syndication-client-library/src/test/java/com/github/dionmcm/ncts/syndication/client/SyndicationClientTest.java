@@ -282,6 +282,8 @@ public class SyndicationClientTest {
 				);
     }
     
+
+    
     @AfterMethod(alwaysRun=true) @BeforeMethod (alwaysRun=true)
     public void deleteAllFilesInClientFolder() throws IOException {
     	FileUtils.cleanDirectory(outDir); 
