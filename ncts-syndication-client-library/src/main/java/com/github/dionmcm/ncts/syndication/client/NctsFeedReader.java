@@ -17,11 +17,17 @@ import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.jdom2.input.SAXBuilder;
 
+import com.github.dionmcm.ncts.syndication.client.exception.SyndicationFeedException;
+
+import de.skuzzle.semantic.Version;
+import de.skuzzle.semantic.Version.VersionFormatException;
+
 /**
  * Class that reads an NCTS Atom feed and presents it as {@link Entry} objects organised by category.
  */
 public class NctsFeedReader {
-    private static Logger logger = Logger.getLogger(NctsFeedReader.class.getName());
+    private static final String SNOMED_VERSION_REGEXP = "http://snomed.info/sct/(\\d+)/version/(\\d+)";
+    private static final Logger logger = Logger.getLogger(NctsFeedReader.class.getName());
     private static final Namespace NCTS_NAMESPACE = Namespace
         .getNamespace("http://ns.electronichealth.net.au/ncts/syndication/asf/extensions/1.0.0");
     private static final Namespace ATOM_NAMESPACE = Namespace.getNamespace("http://www.w3.org/2005/Atom");
@@ -37,7 +43,7 @@ public class NctsFeedReader {
      * @throws IOException if the document at the feedUrl cannot be read
      */
     public NctsFeedReader(String feedUrl) throws JDOMException, IOException {
-        logger.info("Initialising NctsFeedReader from feed " + feedUrl);
+        logger.info(() -> "Initialising NctsFeedReader from feed " + feedUrl);
         SAXBuilder saxBuilder = new SAXBuilder();
         Document doc = saxBuilder.build(feedUrl);
 
@@ -50,7 +56,7 @@ public class NctsFeedReader {
             String id = entryElement.getChildText("id", ATOM_NAMESPACE);
 
             if (entryCategoryElements.size() != 1) {
-                throw new RuntimeException(
+                throw new SyndicationFeedException(
                     "Entry " + id + " doesn't have exactly one category");
             }
 
@@ -69,7 +75,7 @@ public class NctsFeedReader {
             addEntry(entry);
         }
 
-        logger.info("Feed " + feedUrl + " successfully read");
+        logger.info(() -> "Feed " + feedUrl + " successfully read");
         entries.keySet().forEach(c -> logger.info("Category " + c + " has " + entries.get(c).size() + " entries"));
     }
 
@@ -120,7 +126,7 @@ public class NctsFeedReader {
                 HashSet<Entry> set = new HashSet<>();
                 set.addAll(entries.get(category));
                 if (latestOnly) {
-                    set.retainAll(Arrays.asList(getMax(set)));
+                    set.retainAll(Arrays.asList(getLatestEntry(set)));
                 }
                 matchingEntries.put(category, set);
             }
@@ -129,20 +135,58 @@ public class NctsFeedReader {
         return matchingEntries;
     }
 
-    private Entry getMax(HashSet<Entry> set) {
+    private Entry getLatestEntry(HashSet<Entry> set) {
         return set.stream().max(new Comparator<Entry>() {
             @Override
             public int compare(Entry o1, Entry o2) {
-                return o1.getContentItemVersion().compareTo(o2.getContentItemVersion());
+                String o1VersionString = o1.getContentItemVersion();
+                String o2VersionString = o2.getContentItemVersion();
+
+                if (o1VersionString.matches(SNOMED_VERSION_REGEXP)) {
+                    String o1Module = o1VersionString.replaceFirst(SNOMED_VERSION_REGEXP, "$1");
+                    o1VersionString = o1VersionString.replaceFirst(SNOMED_VERSION_REGEXP, "$2");
+                    if (!o2VersionString.matches(SNOMED_VERSION_REGEXP)) {
+                        throw new SyndicationFeedException(
+                            "Comparing two entries versions from the feed, one is a SNOMED CT "
+                                    + "version URI, the other isn't. Entries were "
+                                    + o1 + " and " + o2);
+                    }
+
+                    String o2Module = o2VersionString.replaceFirst(SNOMED_VERSION_REGEXP, "$1");
+
+                    if (!o1Module.equals(o2Module)) {
+                        throw new SyndicationFeedException(
+                            "Comparing two entries versions from the feed with SNOMED CT "
+                                    + "version URIs with mismatching modules " + o1Module + " and " + o2Module
+                                    + ". Entries were " + o1 + " and " + o2);
+                    }
+                    o2VersionString = o2VersionString.replaceFirst("http://snomed.info/sct/\\d+/version/(\\d+)", "$1");
+                }
+
+
+                if (o1VersionString.matches("\\d+") && o2VersionString.matches("\\d+")) {
+                    return o1VersionString.compareTo(o2VersionString);
+                }
+
+                try {
+                    Version o1Version = Version.parseVersion(o1VersionString);
+                    Version o2Version = Version.parseVersion(o2VersionString);
+                    return o1Version.compareTo(o2Version);
+                } catch (VersionFormatException e) {
+                    throw new SyndicationFeedException(
+                        "Latest entry cannot be determined, version strings for entries are not pure numbers"
+                                + " (string of digits) or semantic versioning. Entries were " + o1 + " and " + o2,
+                        e);
+                }
             }
-        }).get();
+        }).orElseThrow(() -> new SyndicationFeedException("No latest entry for set " + set));
     }
 
     private Element getLink(Element entry) {
         List<Element> links = entry.getChildren("link", ATOM_NAMESPACE);
 
         if (links.size() != 1) {
-            throw new RuntimeException(
+            throw new SyndicationFeedException(
                 "Entry " + entry.getChild("id", ATOM_NAMESPACE) + " does not have exactly one link");
         }
         return links.iterator().next();
@@ -156,7 +200,7 @@ public class NctsFeedReader {
         }
 
         if (cachedEntries.contains(entry)) {
-            throw new RuntimeException("Feed contains duplicate entries for ID " + entry.getId());
+            throw new SyndicationFeedException("Feed contains duplicate entries for ID " + entry.getId());
         }
 
         cachedEntries.add(entry);
