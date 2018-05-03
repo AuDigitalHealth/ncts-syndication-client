@@ -45,6 +45,11 @@
 			<version>2.4</version>
 		</dependency>
 		<dependency>
+			<groupId>de.skuzzle</groupId>
+			<artifactId>semantic-version</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.mock-server</groupId>
 			<artifactId>mockserver-netty</artifactId>
 			<version>5.3.0</version>

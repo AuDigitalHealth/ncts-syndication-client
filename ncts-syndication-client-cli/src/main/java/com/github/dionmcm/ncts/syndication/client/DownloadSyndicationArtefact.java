@@ -14,6 +14,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jdom2.JDOMException;
 
+import com.github.dionmcm.ncts.syndication.client.exception.HashValidationFailureException;
+
 /**
  * Command line executable class that downloads entries from the NCTS syndication feed based on the specified categories
  * of entries to download
@@ -31,11 +33,13 @@ public class DownloadSyndicationArtefact {
 
     public static void main(String[] args) throws URISyntaxException, NoSuchAlgorithmException, JDOMException,
             IOException, HashValidationFailureException {
-        String feedUrl, tokenUrl;
+        String feedUrl;
+        String tokenUrl;
         File outputDirectory;
         String[] categories;
         boolean latestOnly;
-        String clientId, clientSecret;
+        String clientId;
+        String clientSecret;
 
         CommandLineParser parser = new DefaultParser();
         Options options = getOptions();

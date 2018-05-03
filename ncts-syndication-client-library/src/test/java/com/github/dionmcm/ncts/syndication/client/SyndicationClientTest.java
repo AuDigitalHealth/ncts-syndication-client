@@ -37,6 +37,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.github.dionmcm.ncts.syndication.client.exception.HashValidationFailureException;
+
 public class SyndicationClientTest {
 	
     private static final String SCT_RF2_RED_CATEGORY = "SCT_RF2_RED";

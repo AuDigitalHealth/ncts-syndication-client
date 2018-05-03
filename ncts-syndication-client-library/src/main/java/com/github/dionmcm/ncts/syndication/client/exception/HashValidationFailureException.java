@@ -1,15 +1,15 @@
-package com.github.dionmcm.ncts.syndication.client;
+package com.github.dionmcm.ncts.syndication.client.exception;
 
 import java.io.File;
 
 public class HashValidationFailureException extends Exception {
     private static final long serialVersionUID = 1L;
 
-    File filePath;
-    String hash;
-    long length;
-    String feedHash;
-    long feedLength;
+    final File filePath;
+    final String hash;
+    final long length;
+    final String feedHash;
+    final long feedLength;
 
     public HashValidationFailureException(File filePath, String hash, long length, String feedHash, long feedLength) {
         super("File " + filePath.getAbsolutePath() + " with hash " + hash + " and length " + length
