@@ -228,6 +228,13 @@ public class SyndicationClientTest {
         assertTrue(filesInClientFolder.contains("blue1.r2"), "blue1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("blue2.r2"), "blue2.r2 file should be in the download directory");
     }
+    
+    @Test(priority = 10, groups = "authentication", description="Tests that IOException is thrown when token can not be obtained", enabled = true, expectedExceptions = IOException.class)
+    public void cannotGetTokenException() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException{
+    	testClient = new SyndicationClient(feedURL,"http://doesn't-work.com", outDir, clientID, secret);
+        testClient.downloadLatest("SCT_RF2_BLUE");
+        // expect IOException using TestNG annotation
+    }
 
     
     @BeforeClass
@@ -268,7 +275,7 @@ public class SyndicationClientTest {
     	mockServerClient.when(HttpRequest.request().withPath("/mockToken"))
 		.respond(
 				HttpResponse.response()
-				.withBody("{ \"Access-token\":\"123\"}")
+				.withBody("{ \"access_token\":\"123\"}")
 				);
     }
     
