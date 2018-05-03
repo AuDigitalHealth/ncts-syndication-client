@@ -2,14 +2,24 @@ package com.github.dionmcm.ncts.syndication.client;
 
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +88,7 @@ public class SyndicationClientTest {
         assertTrue(filesInClientFolder.contains("blue2.r2"), "blue2.r2 file should be in the download directory");
     }
 
-    @Test(priority = 2, groups = "downloading", enabled = true )
+    @Test(priority = 2, groups = "downloading", description="Tests that the client accurately downloads the latest file in a single category", enabled = true )
     public void downloadsLatestInCategory() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
         DownloadResult result = testClient.downloadLatest(SCT_RF2_PURPLE_CATEGORY);
@@ -91,15 +101,91 @@ public class SyndicationClientTest {
         assertTrue(filesInClientFolder.contains("purple2.r2"), "purple2.r2 file should be in the download directory");
     }
     
-    @Test(priority = 3, groups = "downloading", enabled = true, expectedExceptions = HashValidationFailureException.class)
+    @Test(priority = 3, groups = "downloading", description="Tests that the client doesn't re-download an existing file", enabled = true )
+    public void doNotReDownloadExistingFile() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
+    	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
+        DownloadResult result = testClient.downloadLatest(SCT_RF2_PURPLE_CATEGORY);
+        result = testClient.downloadLatest(SCT_RF2_PURPLE_CATEGORY);
+        
+        assertFalse(result.isFreshlyDownloaded(),
+        		"the client should report that the file was not freshly downloaded second time around");
+
+    }
+    
+    @Test(priority = 4, groups = "downloading", description="Tests that the client redownloads if the file already exists, but has a different hash", enabled = true )
+    public void redownloadIfExistingFileIsDifferent() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
+    	
+    	Files.write(Paths.get(outDir + "/purple2.r2"), Arrays.asList("dummy file"), Charset.forName("UTF-8"));
+    	
+    	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
+        DownloadResult result = testClient.downloadLatest(SCT_RF2_PURPLE_CATEGORY);
+        
+        assertTrue(result.isFreshlyDownloaded(),
+        		"the client should report that the file was freshly download");
+        
+        List<String> lines = Files.readAllLines(Paths.get(outDir + "/purple2.r2"));
+        assertNotEquals(lines.get(0), "dummy file",
+        		"the file should be different from the dummy file created");
+    }
+    
+    @Test(priority = 5, groups = "downloading", description="Tests that the client downloads the latest file in multiple categories", enabled = true )
+    public void downloadsLatestFilesFromMultipleCategories() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
+    	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
+        Map<String, List<DownloadResult>> result =
+                testClient.download(true, SCT_RF2_PURPLE_CATEGORY, SCT_RF2_RED_CATEGORY, SCT_RF2_BLUE_CATEGORY);
+
+        assertEquals(result.keySet().size(), 3, "response from the client should contain 3 catagories");
+        assertTrue(result.keySet().contains(SCT_RF2_PURPLE_CATEGORY),
+            "response from the client should contain the purple catagory");
+        assertTrue(result.keySet().contains(SCT_RF2_RED_CATEGORY),
+            "response from the client should contain the red catagory");
+        assertTrue(result.keySet().contains(SCT_RF2_BLUE_CATEGORY),
+            "response from the client should contain the blue catagory");
+    	
+        // test the purple category
+        List<String> downloadedFiles = getDownloadedFileNames(result.get(SCT_RF2_PURPLE_CATEGORY));
+        assertEquals(downloadedFiles.size(), 1, "1 purple files should be reported by the client as downloaded");
+        assertTrue(downloadedFiles.contains("purple2.r2"),
+            "purple2.r2 file should be reported by the client as downloaded");
+
+        // test the red category
+        downloadedFiles = getDownloadedFileNames(result.get(SCT_RF2_RED_CATEGORY));
+        assertEquals(downloadedFiles.size(), 1, "1 red files should be reported by the client as downloaded");
+        assertTrue(downloadedFiles.contains("red1.r2"),
+            "red1.r2 file should be reported by the client as downloaded");
+
+        // test the blue category
+        downloadedFiles = getDownloadedFileNames(result.get(SCT_RF2_BLUE_CATEGORY));
+        assertEquals(downloadedFiles.size(), 1, "1 blue files should be reported by the client as downloaded");
+        assertTrue(downloadedFiles.contains("blue1.r2"),
+            "blue1.r2 file should be reported by the client as downloaded");
+
+    	
+    	//assert files not missing from local directory
+        List<String> filesInClientFolder = getFilenamesInDownloadsDirectory();
+        assertEquals(filesInClientFolder.size(), 3,
+            "exactly 3 files should be in the download directory for the client");
+        assertTrue(filesInClientFolder.contains("purple2.r2"), "purple2.r2 file should be in the download directory");
+        assertTrue(filesInClientFolder.contains("red1.r2"), "red1.r2 file should be in the download directory");
+        assertTrue(filesInClientFolder.contains("blue1.r2"), "blue1.r2 file should be in the download directory");
+    }
+    
+    @Test(priority = 6, groups = "downloading", description="Tests that the HashVaildationFailureException is thrown when the file on the server mismatches the hash in syndication", enabled = true, expectedExceptions = HashValidationFailureException.class)
     public void hashMismatchInSyndicationThrowsException() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException{
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
         testClient.downloadLatest("SCT_RF2_GREEN");
         // expect HashValidationFailureException using TestNG annotation
     }
     
-    @Test(priority = 4, groups = "downloading", enabled = true )
-    public void downloadsFilesFromMultipleCategories() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
+    @Test(priority = 7, groups = "downloading", description="Tests that a RuntimeException is thrown when provided with a non-existent category", enabled = true, expectedExceptions = RuntimeException.class)
+    public void nonExistentCategoryThrowsException() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException{
+    	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
+        testClient.downloadLatest("SCT_RF2_YELLOW");
+        // expect HashValidationFailureException using TestNG annotation
+    }
+    
+    @Test(priority = 8, groups = "downloading", enabled = true )
+    public void downloadsAllFilesFromMultipleCategories() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
         Map<String, List<DownloadResult>> result =
                 testClient.download(false, SCT_RF2_PURPLE_CATEGORY, SCT_RF2_RED_CATEGORY, SCT_RF2_BLUE_CATEGORY);
@@ -117,8 +203,8 @@ public class SyndicationClientTest {
         assertEquals(downloadedFiles.size(), 2, "2 purple files should be reported by the client as downloaded");
         assertTrue(downloadedFiles.contains("purple1.r2"),
             "purple1.r2 file should be reported by the client as downloaded");
-        assertTrue(downloadedFiles.contains("purple1.r2"),
-            "purple1.r2 file should be reported by the client as downloaded");
+        assertTrue(downloadedFiles.contains("purple2.r2"),
+            "purple2.r2 file should be reported by the client as downloaded");
 
         // test the red category
         downloadedFiles = getDownloadedFileNames(result.get(SCT_RF2_RED_CATEGORY));
@@ -137,7 +223,7 @@ public class SyndicationClientTest {
     	//assert files not missing from local directory
         List<String> filesInClientFolder = getFilenamesInDownloadsDirectory();
         assertEquals(filesInClientFolder.size(), 5,
-            "exactly 2 files should be in the download directory for the client");
+            "exactly 5 files should be in the download directory for the client");
         assertTrue(filesInClientFolder.contains("purple1.r2"), "purple1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("purple2.r2"), "purple2.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("red1.r2"), "red1.r2 file should be in the download directory");

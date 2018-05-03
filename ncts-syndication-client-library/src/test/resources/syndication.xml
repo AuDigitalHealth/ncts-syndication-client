@@ -32,7 +32,7 @@
     <published>2017-11-16T00:25:01Z</published>
     <summary>SNOMED CT-AU is the Australian extension to the Systematized Nomenclature of Medicine, Clinical Terms (SNOMED CT), incorporating all Australian-developed terminology including the Australian Medicines Terminology (AMT) along with the core international data. SNOMED CT-AU provides local variations and customisations of terms relevant to the Australian healthcare sector for implementation in Australian clinical IT systems.</summary>
     <ncts:contentItemIdentifier>http://snomed.info/sct/32506021000036107</ncts:contentItemIdentifier>
-    <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
+    <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171231</ncts:contentItemVersion>
   </entry>
 
 
