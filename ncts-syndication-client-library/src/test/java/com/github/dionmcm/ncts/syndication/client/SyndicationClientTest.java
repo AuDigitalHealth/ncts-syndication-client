@@ -99,7 +99,7 @@ public class SyndicationClientTest {
         assertTrue(filesInClientFolder.contains("purple2.r2"), "purple2.r2 file should be in the download directory");
     }
     
-    @Test(priority = 2, groups = "downloading", description="Tests that the client doesn't re-download an existing file", enabled = true )
+    @Test(priority = 3, groups = "downloading", description="Tests that the client doesn't re-download an existing file", enabled = true )
     public void doNotReDownloadExistingFile() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
         DownloadResult result = testClient.downloadLatest(SCT_RF2_PURPLE_CATEGORY);
@@ -110,7 +110,7 @@ public class SyndicationClientTest {
 
     }
     
-    @Test(priority = 2, groups = "downloading", description="Tests that the client redownloads if the file already exists, but has a different hash", enabled = true )
+    @Test(priority = 4, groups = "downloading", description="Tests that the client redownloads if the file already exists, but has a different hash", enabled = true )
     public void redownloadIfExistingFileIsDifferent() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
     	
     	Files.write(Paths.get(outDir + "/purple2.r2"), Arrays.asList("dummy file"), Charset.forName("UTF-8"));
@@ -126,7 +126,7 @@ public class SyndicationClientTest {
         		"the file should be different from the dummy file created");
     }
     
-    @Test(priority = 4, groups = "downloading", description="Tests that the client downloads the latest file in multiple categories", enabled = true )
+    @Test(priority = 5, groups = "downloading", description="Tests that the client downloads the latest file in multiple categories", enabled = true )
     public void downloadsLatestFilesFromMultipleCategories() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
         Map<String, List<DownloadResult>> result =
@@ -168,21 +168,21 @@ public class SyndicationClientTest {
         assertTrue(filesInClientFolder.contains("blue1.r2"), "blue1.r2 file should be in the download directory");
     }
     
-    @Test(priority = 3, groups = "downloading", description="Tests that the HashVaildationFailureException is thrown when the file on the server mismatches the hash in syndication", enabled = true, expectedExceptions = HashValidationFailureException.class)
+    @Test(priority = 6, groups = "downloading", description="Tests that the HashVaildationFailureException is thrown when the file on the server mismatches the hash in syndication", enabled = true, expectedExceptions = HashValidationFailureException.class)
     public void hashMismatchInSyndicationThrowsException() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException{
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
         testClient.downloadLatest("SCT_RF2_GREEN");
         // expect HashValidationFailureException using TestNG annotation
     }
     
-    @Test(priority = 3, groups = "downloading", description="Tests that a RuntimeException is thrown when provided with a non-existent category", enabled = true, expectedExceptions = RuntimeException.class)
+    @Test(priority = 7, groups = "downloading", description="Tests that a RuntimeException is thrown when provided with a non-existent category", enabled = true, expectedExceptions = RuntimeException.class)
     public void nonExistentCategoryThrowsException() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException{
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
         testClient.downloadLatest("SCT_RF2_YELLOW");
         // expect HashValidationFailureException using TestNG annotation
     }
     
-    @Test(priority = 4, groups = "downloading", enabled = true )
+    @Test(priority = 8, groups = "downloading", enabled = true )
     public void downloadsAllFilesFromMultipleCategories() throws IOException, URISyntaxException, NoSuchAlgorithmException, JDOMException, HashValidationFailureException {
     	testClient = new SyndicationClient(feedURL,tokenURL, outDir, clientID, secret);
         Map<String, List<DownloadResult>> result =
