@@ -22,5 +22,9 @@
 hs_err_pid*
 target
 *.versionsBackup
+test-output
+testng.xml
+.classpath
 .project
+.settings
 bin
