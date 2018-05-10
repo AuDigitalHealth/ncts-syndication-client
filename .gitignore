@@ -31,8 +31,8 @@ pom.xml.versionsBackup
 ncts-syndication-client-cli/pom.xml.versionsBackup
 ncts-syndication-client-library/pom.xml.versionsBackup
 ncts-syndication-client-plugin/pom.xml.versionsBackup
-**/test-output
-**/testng.xml
-**/.classpath
-**/.project
-**/.settings/
+test-output
+testng.xml
+.classpath
+.project
+.settings
