@@ -60,7 +60,7 @@ The library can be downloaded from Maven Central as a dependency
 
 ```xml
 <dependency>
-    <groupId>com.github.dionmcm</groupId>
+    <groupId>au.gov.digitalhealth</groupId>
     <artifactId>ncts-syndication-client-library</artifactId>
     <version>0.0.5</version>
 </dependency>
@@ -110,7 +110,7 @@ A simple example is
 <build>
   <plugins>
     <plugin>
-      <groupId>com.github.dionmcm</groupId>
+      <groupId>au.gov.digitalhealth</groupId>
       <artifactId>ncts-syndication-client</artifactId>
       <version>0.0.5</version>
       <configuration>
@@ -133,7 +133,7 @@ For the complete parameter set as an example
 <build>
   <plugins>
     <plugin>
-      <groupId>com.github.dionmcm</groupId>
+      <groupId>au.gov.digitalhealth</groupId>
       <artifactId>ncts-syndication-client</artifactId>
       <version>0.0.5</version>
       <configuration>
@@ -170,7 +170,7 @@ explanatory.
 
 ```
 usage: java
-            com.github.dionmcm.ncts.syndication.client.DownloadSyndication
+            au.gov.digitalhealth.ncts.syndication.client.DownloadSyndication
             Artefact
  -?,--help                       Prints the parameter usage help
  -category <arg>                 Category to download entries for, these

@@ -1,10 +1,11 @@
-package com.github.dionmcm.ncts.syndication.client;
+package au.gov.digitalhealth.ncts.syndication.client;
 
 import java.io.File;
 
 /**
- * Result of a download which indicates where the file was downloaded to and whether it was freshly downloaded (either
- * it wasn't already downloaded or the local file's hash didn't match) or that the local directory already had the
+ * Result of a download which indicates where the file was downloaded to and
+ * whether it was freshly downloaded (either it wasn't already downloaded or the
+ * local file's hash didn't match) or that the local directory already had the
  * requested artefact with a hash matching the feed.
  */
 public class DownloadResult {
@@ -25,8 +26,9 @@ public class DownloadResult {
     }
 
     /**
-     * @return true if the file was downloaded or false if the local location already had an up to date copy of the
-     *         artefact with a hash matching the feed
+     * @return true if the file was downloaded or false if the local location
+     *         already had an up to date copy of the artefact with a hash matching
+     *         the feed
      */
     public boolean isFreshlyDownloaded() {
         return freshlyDownloaded;

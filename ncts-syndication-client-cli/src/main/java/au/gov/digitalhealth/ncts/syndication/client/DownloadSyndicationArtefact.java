@@ -1,4 +1,4 @@
-package com.github.dionmcm.ncts.syndication.client;
+package au.gov.digitalhealth.ncts.syndication.client;
 
 import java.io.File;
 import java.io.IOException;

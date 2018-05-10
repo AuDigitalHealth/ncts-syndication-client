@@ -1,4 +1,4 @@
-package com.github.dionmcm.ncts.syndication.client;
+package au.gov.digitalhealth.ncts.syndication.client;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,11 +29,12 @@ public class SyndicationClient {
     String clientSecret;
 
     /**
-     * Constructs a new client defaulting the token URL to {@link #TOKEN_URL} and the feed URL to {@link #FEED_URL}.
+     * Constructs a new client defaulting the token URL to {@link #TOKEN_URL} and
+     * the feed URL to {@link #FEED_URL}.
      * 
      * @param outputDirectory directory to download resources to
-     * @param clientId clientID for authentication
-     * @param clientSecret client secret for authentication
+     * @param clientId        clientID for authentication
+     * @param clientSecret    client secret for authentication
      * @throws URISyntaxException if the feed or token URLs are invalid URIs
      */
     public SyndicationClient(File outputDirectory, String clientId, String clientSecret) throws URISyntaxException {
@@ -43,11 +44,11 @@ public class SyndicationClient {
     /**
      * Constructs a new client.
      * 
-     * @param feedUrl URL of the syndication feed
-     * @param tokenUrl URL to authenticate against
+     * @param feedUrl         URL of the syndication feed
+     * @param tokenUrl        URL to authenticate against
      * @param outputDirectory directory to download resources to
-     * @param clientId clientID for authentication
-     * @param clientSecret client secret for authentication
+     * @param clientId        clientID for authentication
+     * @param clientSecret    client secret for authentication
      * @throws URISyntaxException if the feed or token URLs are invalid URIs
      */
     public SyndicationClient(String feedUrl, String tokenUrl, File outputDirectory, String clientId,
@@ -61,23 +62,31 @@ public class SyndicationClient {
     }
 
     /**
-     * Downloads the specified categories artefacts to the client's download directory specified in the client's
-     * constructor. If files are already present in the download directory the SHA256 will be tested, and if the local
-     * copy's SHA256 does not match the feed the item will be downloaded over the top of the existing local copy. SHA256
-     * hashes are tested for each download and if they fail an exception is thrown and the client aborts.
+     * Downloads the specified categories artefacts to the client's download
+     * directory specified in the client's constructor. If files are already present
+     * in the download directory the SHA256 will be tested, and if the local copy's
+     * SHA256 does not match the feed the item will be downloaded over the top of
+     * the existing local copy. SHA256 hashes are tested for each download and if
+     * they fail an exception is thrown and the client aborts.
      * 
-     * @param latestOnly if true only the latest artefact version from each specified category will be downloaded,
-     *            otherwise all artefacts for each category will be downloaded
+     * @param latestOnly if true only the latest artefact version from each
+     *                   specified category will be downloaded, otherwise all
+     *                   artefacts for each category will be downloaded
      * @param categories syndication feed categories to download, refer to
-     *            https://www.healthterminologies.gov.au/specs/v2/conformant-server-apps/syndication-api/syndication-
-     *            feed
-     * @return a Map containing all the requests categories and a List of {@link DownloadResult}s, one for each aretfact
-     *         in the feed matching the categories provided and latestOnly setting
-     * @throws JDOMException if the syndication feed cannot be parsed
-     * @throws IOException if an error occurs trying to get the feed or its contents
-     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be loaded
-     * @throws HashValidationFailureException if the downloaded file's SHA256 doesn't match the hash specified in the
-     *             feed
+     *                   https://www.healthterminologies.gov.au/specs/v2/conformant-server-apps/syndication-api/syndication-
+     *                   feed
+     * @return a Map containing all the requests categories and a List of
+     *         {@link DownloadResult}s, one for each aretfact in the feed matching
+     *         the categories provided and latestOnly setting
+     * @throws JDOMException                  if the syndication feed cannot be
+     *                                        parsed
+     * @throws IOException                    if an error occurs trying to get the
+     *                                        feed or its contents
+     * @throws NoSuchAlgorithmException       if the SHA256 algorithm can't be
+     *                                        loaded
+     * @throws HashValidationFailureException if the downloaded file's SHA256
+     *                                        doesn't match the hash specified in
+     *                                        the feed
      */
     public Map<String, List<DownloadResult>> download(boolean latestOnly, String... categories)
             throws JDOMException, IOException, NoSuchAlgorithmException, HashValidationFailureException {
@@ -108,12 +117,17 @@ public class SyndicationClient {
      * See {@link #download(boolean, String...)} for more details.
      * 
      * @param categories
-     * @return {@link Map} containing one {@link DownloadResult} for each specified category.
-     * @throws JDOMException if the syndication feed cannot be parsed
-     * @throws IOException if an error occurs trying to get the feed or its contents
-     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be loaded
-     * @throws HashValidationFailureException if the downloaded file's SHA256 doesn't match the hash specified in the
-     *             feed
+     * @return {@link Map} containing one {@link DownloadResult} for each specified
+     *         category.
+     * @throws JDOMException                  if the syndication feed cannot be
+     *                                        parsed
+     * @throws IOException                    if an error occurs trying to get the
+     *                                        feed or its contents
+     * @throws NoSuchAlgorithmException       if the SHA256 algorithm can't be
+     *                                        loaded
+     * @throws HashValidationFailureException if the downloaded file's SHA256
+     *                                        doesn't match the hash specified in
+     *                                        the feed
      */
     public Map<String, DownloadResult> downloadLatestFromCategories(String... categories)
             throws NoSuchAlgorithmException, JDOMException, IOException, HashValidationFailureException {
@@ -132,24 +146,30 @@ public class SyndicationClient {
     }
 
     /**
-     * Convenience method to download the latest file for the specified single category.
+     * Convenience method to download the latest file for the specified single
+     * category.
      * <p>
      * See {@link #download(boolean, String...)} for more details.
      * 
      * @param category
-     * @return a single {@link DownloadResult} for the requested latest file in the category
-     * @throws JDOMException if the syndication feed cannot be parsed
-     * @throws IOException if an error occurs trying to get the feed or its contents
-     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be loaded
-     * @throws HashValidationFailureException if the downloaded file's SHA256 doesn't match the hash specified in the
-     *             feed
+     * @return a single {@link DownloadResult} for the requested latest file in the
+     *         category
+     * @throws JDOMException                  if the syndication feed cannot be
+     *                                        parsed
+     * @throws IOException                    if an error occurs trying to get the
+     *                                        feed or its contents
+     * @throws NoSuchAlgorithmException       if the SHA256 algorithm can't be
+     *                                        loaded
+     * @throws HashValidationFailureException if the downloaded file's SHA256
+     *                                        doesn't match the hash specified in
+     *                                        the feed
      */
     public DownloadResult downloadLatest(String category)
             throws NoSuchAlgorithmException, JDOMException, IOException, HashValidationFailureException {
         Map<String, DownloadResult> downloadResults = downloadLatestFromCategories(category);
         if (downloadResults.keySet().size() != 1 || !downloadResults.keySet().iterator().next().equals(category)) {
-            throw new RuntimeException("Expected only 1 category " + category + " but encountered "
-                    + downloadResults.keySet());
+            throw new RuntimeException(
+                    "Expected only 1 category " + category + " but encountered " + downloadResults.keySet());
         }
 
         return downloadResults.get(category);

@@ -1,4 +1,4 @@
-package com.github.dionmcm.ncts.syndication.client;
+package au.gov.digitalhealth.ncts.syndication.client;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -39,7 +39,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Class that reads an NCTS Atom feed and presents it as {@link Entry} objects organised by category.
+ * Class that reads an NCTS Atom feed and presents it as {@link Entry} objects
+ * organised by category.
  */
 public class NctsFileDownloader {
 
@@ -60,31 +61,40 @@ public class NctsFileDownloader {
     }
 
     /**
-     * Downloads the specified {@link Entry} from a {@link NctsFeedReader} to the specified directory.
+     * Downloads the specified {@link Entry} from a {@link NctsFeedReader} to the
+     * specified directory.
      * <p>
-     * Files will be downloaded into a subdirectory with the name of the category they are from and with the filename
-     * from the URL the {@link Entry} is at.
+     * Files will be downloaded into a subdirectory with the name of the category
+     * they are from and with the filename from the URL the {@link Entry} is at.
      * <p>
-     * If a file already exists it will be checked against the SHA256 and length from the entry in the feed. If it
-     * matches this download will be skipped. If it does not match, a warning is logged and the file is deleted and
-     * downloaded again - this can be useful in cases where a download was killed and a partial file remains.
+     * If a file already exists it will be checked against the SHA256 and length
+     * from the entry in the feed. If it matches this download will be skipped. If
+     * it does not match, a warning is logged and the file is deleted and downloaded
+     * again - this can be useful in cases where a download was killed and a partial
+     * file remains.
      * <p>
      * If the file doesn't exist at all it will be downloaded.
      * <p>
-     * Once the file is downloaded, the SHA256 and length is checked against the details in the {@link Entry} from the
-     * feed. If the SHA256 or length don't match the file will be deleted (to prevent its use) and an exception is
+     * Once the file is downloaded, the SHA256 and length is checked against the
+     * details in the {@link Entry} from the feed. If the SHA256 or length don't
+     * match the file will be deleted (to prevent its use) and an exception is
      * thrown.
      * 
-     * @param entry the {@link Entry} to download
-     * @param outputDirectory the base directory to download to, the {@link Entry} will be downloaded to a directory
-     *            named the same as the category the entry is in and the filename will be the same as the filename in
-     *            the entry url
-     * @return DownloadResult indicating the location of the downloaded file and whether it was downloaded or the
-     *         locally cached file was up to date already
-     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be loaded
-     * @throws IOException if an error occurs reading the file from the URL or writing it to disk
-     * @throws HashValidationFailureException if the downloaded file's SHA256 doesn't match the hash specified in the
-     *             feed
+     * @param entry           the {@link Entry} to download
+     * @param outputDirectory the base directory to download to, the {@link Entry}
+     *                        will be downloaded to a directory named the same as
+     *                        the category the entry is in and the filename will be
+     *                        the same as the filename in the entry url
+     * @return DownloadResult indicating the location of the downloaded file and
+     *         whether it was downloaded or the locally cached file was up to date
+     *         already
+     * @throws NoSuchAlgorithmException       if the SHA256 algorithm can't be
+     *                                        loaded
+     * @throws IOException                    if an error occurs reading the file
+     *                                        from the URL or writing it to disk
+     * @throws HashValidationFailureException if the downloaded file's SHA256
+     *                                        doesn't match the hash specified in
+     *                                        the feed
      */
     public DownloadResult downloadEntry(Entry entry, File outputDirectory)
             throws IOException, NoSuchAlgorithmException, HashValidationFailureException {
@@ -122,9 +132,8 @@ public class NctsFileDownloader {
         builder.addInterceptorFirst((HttpRequest request, HttpContext context) -> {
             request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getBearerTokenFromAuthServer());
         });
-        try (
-                DigestOutputStream dos =
-                        new DigestOutputStream(new BufferedOutputStream(new FileOutputStream(out)), digest);
+        try (DigestOutputStream dos = new DigestOutputStream(new BufferedOutputStream(new FileOutputStream(out)),
+                digest);
                 CloseableHttpClient httpClient = builder.build();
                 CloseableHttpResponse response = httpClient.execute(new HttpGet(entry.getUrl()));) {
             InputStream is = response.getEntity().getContent();
@@ -141,8 +150,8 @@ public class NctsFileDownloader {
                 logger.warning("Unable to delete downloaded file " + out.getAbsolutePath()
                         + " whose sha256 doesn't match the feed.");
             }
-            throw new HashValidationFailureException(out, downloadedFileSha256, length,
-                entry.getSha256(), entry.getLength());
+            throw new HashValidationFailureException(out, downloadedFileSha256, length, entry.getSha256(),
+                    entry.getLength());
         }
     }
 
@@ -155,8 +164,7 @@ public class NctsFileDownloader {
 
     private boolean sha256AndLengthMatch(Entry entry, File out) throws IOException {
         String existingSha256;
-        try (
-                FileInputStream fis = new FileInputStream(out)) {
+        try (FileInputStream fis = new FileInputStream(out)) {
             existingSha256 = DigestUtils.sha256Hex(fis);
         }
 
@@ -180,7 +188,8 @@ public class NctsFileDownloader {
                 post.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 post.setEntity(new UrlEncodedFormEntity(data, "utf-8"));
                 HttpEntity responseEntity = client.execute(post).getEntity();
-                Type type = new TypeToken<Map<String, String>>() {}.getType();
+                Type type = new TypeToken<Map<String, String>>() {
+                }.getType();
                 Map<String, String> responseMap = gson.fromJson(EntityUtils.toString(responseEntity), type);
                 token = responseMap.get("access_token");
             } catch (IOException e) {

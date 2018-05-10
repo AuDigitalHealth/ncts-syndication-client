@@ -1,4 +1,4 @@
-package com.github.dionmcm.ncts.syndication.client;
+package au.gov.digitalhealth.ncts.syndication.client;
 
 import java.io.File;
 
@@ -41,8 +41,8 @@ public class DownloadSyndicationArtefactMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         try {
 
-            SyndicationClient client =
-                    new SyndicationClient(feedUrl, tokenUrl, outputDirectory, clientId, clientSecret);
+            SyndicationClient client = new SyndicationClient(feedUrl, tokenUrl, outputDirectory, clientId,
+                    clientSecret);
 
             client.download(latestOnly, categories);
 

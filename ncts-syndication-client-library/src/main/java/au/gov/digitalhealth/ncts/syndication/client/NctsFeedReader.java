@@ -1,4 +1,4 @@
-package com.github.dionmcm.ncts.syndication.client;
+package au.gov.digitalhealth.ncts.syndication.client;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -21,23 +21,26 @@ import de.skuzzle.semantic.Version;
 import de.skuzzle.semantic.Version.VersionFormatException;
 
 /**
- * Class that reads an NCTS Atom feed and presents it as {@link Entry} objects organised by category.
+ * Class that reads an NCTS Atom feed and presents it as {@link Entry} objects
+ * organised by category.
  */
 public class NctsFeedReader {
     private static final Logger logger = Logger.getLogger(NctsFeedReader.class.getName());
     private static final Namespace NCTS_NAMESPACE = Namespace
-        .getNamespace("http://ns.electronichealth.net.au/ncts/syndication/asf/extensions/1.0.0");
+            .getNamespace("http://ns.electronichealth.net.au/ncts/syndication/asf/extensions/1.0.0");
     private static final Namespace ATOM_NAMESPACE = Namespace.getNamespace("http://www.w3.org/2005/Atom");
 
     private Map<String, Set<Entry>> entries = new HashMap<>();
 
     /**
-     * Constructs a new NCTS feed reader for the specified URL. If the URL cannot be read or the document at that URL
-     * cannot be parsed as expected an exception will be thrown.
+     * Constructs a new NCTS feed reader for the specified URL. If the URL cannot be
+     * read or the document at that URL cannot be parsed as expected an exception
+     * will be thrown.
      * 
      * @param feedUrl the URL of the NCTS syndication feed to read
-     * @throws JDOMException if the document at the feedUrl cannot be parsed as valid XML
-     * @throws IOException if the document at the feedUrl cannot be read
+     * @throws JDOMException if the document at the feedUrl cannot be parsed as
+     *                       valid XML
+     * @throws IOException   if the document at the feedUrl cannot be read
      */
     public NctsFeedReader(String feedUrl) throws JDOMException, IOException {
         logger.info("Initialising NctsFeedReader from feed " + feedUrl);
@@ -53,21 +56,16 @@ public class NctsFeedReader {
             String id = entryElement.getChildText("id", ATOM_NAMESPACE);
 
             if (entryCategoryElements.size() != 1) {
-                throw new RuntimeException(
-                    "Entry " + id + " doesn't have exactly one category");
+                throw new RuntimeException("Entry " + id + " doesn't have exactly one category");
             }
 
             Element entryCategoryElement = entryCategoryElements.iterator().next();
             Element link = getLink(entryElement);
-            Entry entry = new Entry(
-                id,
-                link.getAttributeValue("sha256Hash", NCTS_NAMESPACE),
-                link.getAttributeValue("href"),
-                Long.parseLong(link.getAttributeValue("length")),
-                entryElement.getChildText("contentItemIdentifier", NCTS_NAMESPACE),
-                entryElement.getChildText("contentItemVersion", NCTS_NAMESPACE),
-                entryCategoryElement.getAttributeValue("term"),
-                entryCategoryElement.getAttributeValue("scheme"));
+            Entry entry = new Entry(id, link.getAttributeValue("sha256Hash", NCTS_NAMESPACE),
+                    link.getAttributeValue("href"), Long.parseLong(link.getAttributeValue("length")),
+                    entryElement.getChildText("contentItemIdentifier", NCTS_NAMESPACE),
+                    entryElement.getChildText("contentItemVersion", NCTS_NAMESPACE),
+                    entryCategoryElement.getAttributeValue("term"), entryCategoryElement.getAttributeValue("scheme"));
 
             addEntry(entry);
         }
@@ -77,12 +75,14 @@ public class NctsFeedReader {
     }
 
     /**
-     * Gets the entry with the greatest content item version from the feed in the specified category
+     * Gets the entry with the greatest content item version from the feed in the
+     * specified category
      * 
      * @param category required content category for the entry to match
-     * @return {@link Entry} from the feed in the specified category with the biggest content item version
+     * @return {@link Entry} from the feed in the specified category with the
+     *         biggest content item version
      */
-    public Entry getLatestMatchingEntry(String category){
+    public Entry getLatestMatchingEntry(String category) {
         return getMatchingEntries(true, category).get(category).iterator().next();
     }
 
@@ -90,7 +90,8 @@ public class NctsFeedReader {
      * Gets all the entries for a given category
      * 
      * @param category required category for matching entries
-     * @return {@link Set} of {@link Entry} objects matching the specified category in the feed
+     * @return {@link Set} of {@link Entry} objects matching the specified category
+     *         in the feed
      */
     public Set<Entry> getMatchingEntries(String category) {
         return Collections.unmodifiableSet(entries.get(category));
@@ -99,20 +100,27 @@ public class NctsFeedReader {
     /**
      * Gets {@link Entry} objects from the feed in the specified categories.
      * <p>
-     * The response object is a {@link Map} keyed by the categories specified. Each category in the {@link Map} will
-     * have a {@link Set} of {@link Entry} objects that are in the feed with that category. If latestOnly is set to true
-     * each {@link Set} of {@link Entry} will contain only one {@link Entry} being the one with the largest content item
-     * version for the category, otherwise the {@link Set} will contain all {@link Entry} objects for the category.
+     * The response object is a {@link Map} keyed by the categories specified. Each
+     * category in the {@link Map} will have a {@link Set} of {@link Entry} objects
+     * that are in the feed with that category. If latestOnly is set to true each
+     * {@link Set} of {@link Entry} will contain only one {@link Entry} being the
+     * one with the largest content item version for the category, otherwise the
+     * {@link Set} will contain all {@link Entry} objects for the category.
      * <p>
-     * Only categories found to exist in the feed will be returned as keys in the response {@link Map}.
+     * Only categories found to exist in the feed will be returned as keys in the
+     * response {@link Map}.
      * 
      * @param categories {@link List} of categories to get from the feed
-     * @param latestOnly indicates if only the latest matching {@link Entry} per category should be returned, if true
-     *            each {@link Set} of {@link Entry} for a category will have only one {@link Entry} otherwise all
-     *            {@link Entry}s for each category in the feed will be returned
-     * @return {@link Map} keyed by the specified categories containing one {@link Set} per category containine the
-     *         matching {@link Entry} objects. Note that if a category is specified but does not occur in the feed
-     *         content the category will not appear as a key in the returned map.
+     * @param latestOnly indicates if only the latest matching {@link Entry} per
+     *                   category should be returned, if true each {@link Set} of
+     *                   {@link Entry} for a category will have only one
+     *                   {@link Entry} otherwise all {@link Entry}s for each
+     *                   category in the feed will be returned
+     * @return {@link Map} keyed by the specified categories containing one
+     *         {@link Set} per category containine the matching {@link Entry}
+     *         objects. Note that if a category is specified but does not occur in
+     *         the feed content the category will not appear as a key in the
+     *         returned map.
      */
     public Map<String, Set<Entry>> getMatchingEntries(boolean latestOnly, String... categories) {
         Map<String, Set<Entry>> matchingEntries = new HashMap<>();
@@ -146,9 +154,9 @@ public class NctsFeedReader {
                     return o1Version.compareTo(o2Version);
                 } catch (VersionFormatException e) {
                     throw new RuntimeException(
-                        "Latest entry cannot be determined, version strings for entries are not pure numbers"
-                                + " (string of digits) or semantic versioning. Entries were " + o1 + " and " + o2,
-                        e);
+                            "Latest entry cannot be determined, version strings for entries are not pure numbers"
+                                    + " (string of digits) or semantic versioning. Entries were " + o1 + " and " + o2,
+                            e);
                 }
             }
         }).orElseThrow(() -> new RuntimeException("No latest entry for set " + set));
@@ -159,7 +167,7 @@ public class NctsFeedReader {
 
         if (links.size() != 1) {
             throw new RuntimeException(
-                "Entry " + entry.getChild("id", ATOM_NAMESPACE) + " does not have exactly one link");
+                    "Entry " + entry.getChild("id", ATOM_NAMESPACE) + " does not have exactly one link");
         }
         return links.iterator().next();
     }

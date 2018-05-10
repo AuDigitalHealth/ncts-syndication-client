@@ -1,9 +1,10 @@
-package com.github.dionmcm.ncts.syndication.client;
+package au.gov.digitalhealth.ncts.syndication.client;
 
 import java.io.File;
 
 /**
- * Class that encapsulates the information about an entry in the NCTS syndication feed
+ * Class that encapsulates the information about an entry in the NCTS
+ * syndication feed
  */
 public class Entry {
     private final String id;

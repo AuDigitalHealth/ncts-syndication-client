@@ -1,21 +1,20 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project 
+	xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.dionmcm</groupId>
+	<groupId>au.gov.digitalhealth</groupId>
 	<artifactId>ncts-syndication-client</artifactId>
 	<packaging>pom</packaging>
 	<version>0.0.6-SNAPSHOT</version>
-
 	<name>NCTS Syndication Client Parent POM</name>
 	<description>Parent POM for Java library, Maven Mojo and CLI for downloading content from the National Clinical Terminology Service's syndication feed</description>
 	<url>https://github.com/dionmcm/ncts-syndication-client</url>
-
 	<scm>
 		<connection>scm:git:git@github.com:dionmcm/ncts-syndication-client.git</connection>
 		<url>https://github.com/dionmcm/ncts-syndication-client.git</url>
 		<developerConnection>scm:git:git@github.com:dionmcm/ncts-syndication-client.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
-
+		<tag>HEAD</tag>
+	</scm>
 	<developers>
 		<developer>
 			<id>dionmcm</id>
@@ -27,7 +26,6 @@
 			<timezone>Australia/Brisbane</timezone>
 		</developer>
 	</developers>
-
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -36,7 +34,6 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
-
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -47,13 +44,11 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
-
 	<modules>
 		<module>ncts-syndication-client-library</module>
 		<module>ncts-syndication-client-cli</module>
 		<module>ncts-syndication-client-plugin</module>
 	</modules>
-
 	<reporting>
 		<plugins>
 			<plugin>
@@ -63,17 +58,16 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
 	<profiles>
 		<profile>
 			<id>release</id>
-            <properties>
-                <gpg.executable>gpg</gpg.executable>
-                <gpg.keyname>${env.GPG_KEYNAME}</gpg.keyname>
-                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-                <gpg.defaultKeyring>false</gpg.defaultKeyring>
-                <gpg.publicKeyring>${env.GPG_DIR}/pubring.gpg</gpg.publicKeyring>
-            </properties>
+			<properties>
+				<gpg.executable>gpg</gpg.executable>
+				<gpg.keyname>${env.GPG_KEYNAME}</gpg.keyname>
+				<gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+				<gpg.defaultKeyring>false</gpg.defaultKeyring>
+				<gpg.publicKeyring>${env.GPG_DIR}/pubring.gpg</gpg.publicKeyring>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
