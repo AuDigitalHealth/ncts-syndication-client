@@ -31,7 +31,7 @@ jobs:
           - v1-dependencies-
 
       # run tests!
-      - run: mvn clean install -Dsonar.organization=dionmcm-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_LOGIN -Dsonar.branch.name=$CIRCLE_BRANCH
+      - run: mvn clean install sonar:sonar -Dsonar.organization=dionmcm-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_LOGIN -Dsonar.branch.name=$CIRCLE_BRANCH
 
       - save_cache:
           paths:
