@@ -1,4 +1,4 @@
-package com.github.dionmcm.ncts.syndication.client;
+package com.github.dionmcm.ncts.syndication.client.exception;
 
 import java.io.File;
 

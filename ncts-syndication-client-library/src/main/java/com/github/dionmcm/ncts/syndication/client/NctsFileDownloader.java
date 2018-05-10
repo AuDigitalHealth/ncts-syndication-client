@@ -34,6 +34,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
+import com.github.dionmcm.ncts.syndication.client.exception.AuthenticationException;
+import com.github.dionmcm.ncts.syndication.client.exception.HashValidationFailureException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -93,21 +95,21 @@ public class NctsFileDownloader {
 
         if (out.exists() && out.isFile()) {
             if (!sha256AndLengthMatch(entry, out)) {
-                logger.warning("File " + out.getAbsolutePath() + " exists for entry " + entry.getId()
+                logger.warning(() -> "File " + out.getAbsolutePath() + " exists for entry " + entry.getId()
                         + " but does not match feed entry sha256 and/or length - deleting file and redownloading it.");
                 if (!out.delete()) {
-                    throw new RuntimeException("Unable to delete existing cached file " + out.getAbsolutePath()
+                    throw new IOException("Unable to delete existing cached file " + out.getAbsolutePath()
                             + " whose sha256 doesn't match the feed. Unable to redownload the file with the corrected sha256");
                 }
                 downloadFile(entry, out);
                 return new DownloadResult(out, true);
             } else {
-                logger.info("File " + out.getAbsolutePath() + " exists for entry " + entry.getId()
+                logger.info(() -> "File " + out.getAbsolutePath() + " exists for entry " + entry.getId()
                         + " with matching sha256 and length - skipping dowload.");
                 return new DownloadResult(out, false);
             }
         } else {
-            logger.info("File " + out.getAbsolutePath() + " does not exists for entry " + entry.getId()
+            logger.info(() -> "File " + out.getAbsolutePath() + " does not exists for entry " + entry.getId()
                     + " - starting download for new file.");
             downloadFile(entry, out);
             return new DownloadResult(out, true);
@@ -138,7 +140,7 @@ public class NctsFileDownloader {
         long length = out.length();
         if (!sha256AndLengthMatch(entry, length, downloadedFileSha256)) {
             if (!out.delete()) {
-                logger.warning("Unable to delete downloaded file " + out.getAbsolutePath()
+                logger.warning(() -> "Unable to delete downloaded file " + out.getAbsolutePath()
                         + " whose sha256 doesn't match the feed.");
             }
             throw new HashValidationFailureException(out, downloadedFileSha256, length,
@@ -149,8 +151,7 @@ public class NctsFileDownloader {
     private File getOutputFile(Entry entry, File outputDirectory) {
         String[] urlParts = entry.getUrl().split("[/]");
         String filename = urlParts[urlParts.length - 1];
-        File out = new File(outputDirectory, filename);
-        return out;
+        return new File(outputDirectory, filename);
     }
 
     private boolean sha256AndLengthMatch(Entry entry, File out) throws IOException {
@@ -184,7 +185,7 @@ public class NctsFileDownloader {
                 Map<String, String> responseMap = gson.fromJson(EntityUtils.toString(responseEntity), type);
                 token = responseMap.get("access_token");
             } catch (IOException e) {
-                throw new RuntimeException("Could not get token from authentication server", e);
+                throw new AuthenticationException("Could not get token from authentication server", e);
             }
         }
         return token;

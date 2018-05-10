@@ -14,6 +14,9 @@ import java.util.logging.Logger;
 
 import org.jdom2.JDOMException;
 
+import com.github.dionmcm.ncts.syndication.client.exception.HashValidationFailureException;
+import com.github.dionmcm.ncts.syndication.client.exception.SyndicationFeedException;
+
 /**
  * Downloads the latest version of a syndication artefact
  */
@@ -22,11 +25,11 @@ public class SyndicationClient {
     public static final String TOKEN_URL = "https://api.healthterminologies.gov.au/oauth2/token";
     public static final String FEED_URL = "https://api.healthterminologies.gov.au/syndication/v1/syndication.xml";
 
-    URI feedUrl;
-    URI tokenUrl;
-    File outputDirectory;
-    String clientId;
-    String clientSecret;
+    private URI feedUrl;
+    private URI tokenUrl;
+    private File outputDirectory;
+    private String clientId;
+    private String clientSecret;
 
     /**
      * Constructs a new client defaulting the token URL to {@link #TOKEN_URL} and the feed URL to {@link #FEED_URL}.
@@ -88,7 +91,7 @@ public class SyndicationClient {
 
         Map<String, List<DownloadResult>> result = new HashMap<>();
         if (matchingEntries.isEmpty()) {
-            logger.warning("No entries found to download for specified categories " + categories);
+            logger.warning(() -> "No entries found to download for specified categories " + categories);
         } else {
             for (String category : matchingEntries.keySet()) {
                 List<DownloadResult> downloads = new ArrayList<>();
@@ -121,7 +124,8 @@ public class SyndicationClient {
         Map<String, List<DownloadResult>> downloadResults = download(true, categories);
         for (String category : downloadResults.keySet()) {
             if (downloadResults.get(category).size() != 1) {
-                throw new RuntimeException("Expected only 1 result for category " + category + " but encountered "
+                throw new SyndicationFeedException(
+                    "Expected only 1 result for category " + category + " but encountered "
                         + downloadResults.get(category).size());
             }
 
@@ -148,7 +152,7 @@ public class SyndicationClient {
             throws NoSuchAlgorithmException, JDOMException, IOException, HashValidationFailureException {
         Map<String, DownloadResult> downloadResults = downloadLatestFromCategories(category);
         if (downloadResults.keySet().size() != 1 || !downloadResults.keySet().iterator().next().equals(category)) {
-            throw new RuntimeException("Expected only 1 category " + category + " but encountered "
+            throw new SyndicationFeedException("Expected only 1 category " + category + " but encountered "
                     + downloadResults.keySet());
         }
 

@@ -14,6 +14,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.jdom2.JDOMException;
 
+import com.github.dionmcm.ncts.syndication.client.exception.HashValidationFailureException;
+
 /**
  * Command line executable class that downloads entries from the NCTS syndication feed based on the specified categories
  * of entries to download
