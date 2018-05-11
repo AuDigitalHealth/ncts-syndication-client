@@ -30,6 +30,11 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
+      # Download and cache sonar
+      - restore_cache:
+          keys:
+          - sonar-master
+
       # run tests!
       - run: mvn clean install sonar:sonar -Dsonar.organization=dionmcm-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_LOGIN -Dsonar.branch.name=$CIRCLE_BRANCH
 
@@ -38,4 +43,8 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
+      - save_cache:
+          paths:
+            - ~/.sonar
+          key: sonar-{{ .Branch }}
 
