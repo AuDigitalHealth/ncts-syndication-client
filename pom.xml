@@ -58,6 +58,23 @@
 		</plugins>
 	</reporting>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>3.6</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>6.8</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -86,12 +103,18 @@
 							<configuration>
 								<rules>
 									<rule>
-										<element>PACKAGE</element>
+										<element>CLASS</element>
+										<excludes>
+											<exclude>**/*Test.*</exclude>
+										</excludes>
+										<includes>
+											<include>au/gov/digitalhealth/ncts/syndication/client/**/*</include>
+										</includes>
 										<limits>
 											<limit>
 												<counter>LINE</counter>
 												<value>COVEREDRATIO</value>
-												<minimum>0.0</minimum>
+												<minimum>80.0</minimum>
 											</limit>
 										</limits>
 									</rule>
