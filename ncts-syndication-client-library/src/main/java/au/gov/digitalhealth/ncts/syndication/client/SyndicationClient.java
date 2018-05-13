@@ -3,7 +3,6 @@ package au.gov.digitalhealth.ncts.syndication.client;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,10 +14,13 @@ import java.util.logging.Logger;
 import org.jdom2.JDOMException;
 
 import au.gov.digitalhealth.ncts.syndication.client.exception.HashValidationFailureException;
+import au.gov.digitalhealth.ncts.syndication.client.exception.SyndicationClientInitialisationException;
 import au.gov.digitalhealth.ncts.syndication.client.exception.SyndicationFeedException;
 
 /**
- * Downloads the latest version of a syndication artefact
+ * Downloads the latest version of a syndication artefact.
+ * <p>
+ * Construct
  */
 public class SyndicationClient {
     private static final Logger logger = Logger.getLogger(SyndicationClient.class.getName());
@@ -33,35 +35,60 @@ public class SyndicationClient {
 
     /**
      * Constructs a new client defaulting the token URL to {@link #TOKEN_URL} and
+     * the feed URL to {@link #FEED_URL} with no authentication.
+     * <p>
+     * You can use this constructor and the fluent style setter methods instead of
+     * the constructors with larger parameter lists.
+     */
+    public SyndicationClient() {
+        this(null, null, null);
+        try {
+            setOutputDirectory(File.createTempFile("NctsSyndClientDownload", ""));
+        } catch (IOException e) {
+            throw new SyndicationClientInitialisationException("Cannot create temporary file", e);
+        }
+    }
+
+    /**
+     * Constructs a new client defaulting the token URL to {@link #TOKEN_URL} and
+     * the feed URL to {@link #FEED_URL} with no authentication.
+     * 
+     */
+    public SyndicationClient(File outputDirectory) {
+        this(outputDirectory, null, null);
+    }
+
+    /**
+     * Constructs a new client defaulting the token URL to {@link #TOKEN_URL} and
      * the feed URL to {@link #FEED_URL}.
+     * <p>
+     * Use {@link #SyndicationClient(File)} if no authentication is required.
      * 
      * @param outputDirectory directory to download resources to
-     * @param clientId        clientID for authentication
-     * @param clientSecret    client secret for authentication
-     * @throws URISyntaxException if the feed or token URLs are invalid URIs
+     * @param clientId clientID for authentication
+     * @param clientSecret client secret for authentication
      */
-    public SyndicationClient(File outputDirectory, String clientId, String clientSecret) throws URISyntaxException {
+    public SyndicationClient(File outputDirectory, String clientId, String clientSecret) {
         this(FEED_URL, TOKEN_URL, outputDirectory, clientId, clientSecret);
     }
 
     /**
      * Constructs a new client.
      * 
-     * @param feedUrl         URL of the syndication feed
-     * @param tokenUrl        URL to authenticate against
+     * @param feedUrl URL of the syndication feed
+     * @param tokenUrl URL to authenticate against
      * @param outputDirectory directory to download resources to
-     * @param clientId        clientID for authentication
-     * @param clientSecret    client secret for authentication
-     * @throws URISyntaxException if the feed or token URLs are invalid URIs
+     * @param clientId clientID for authentication - null if no authentication is required
+     * @param clientSecret client secret for authentication - null if no authentication is required
      */
     public SyndicationClient(String feedUrl, String tokenUrl, File outputDirectory, String clientId,
-            String clientSecret) throws URISyntaxException {
+            String clientSecret) {
         super();
-        this.feedUrl = new URI(feedUrl);
-        this.tokenUrl = new URI(tokenUrl);
-        this.outputDirectory = outputDirectory;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+        setFeedUrl(feedUrl);
+        setTokenUrl(tokenUrl);
+        setOutputDirectory(outputDirectory);
+        setClientId(clientId);
+        setClientSecret(clientSecret);
     }
 
     /**
@@ -73,26 +100,26 @@ public class SyndicationClient {
      * they fail an exception is thrown and the client aborts.
      * 
      * @param latestOnly if true only the latest artefact version from each
-     *                   specified category will be downloaded, otherwise all
-     *                   artefacts for each category will be downloaded
+     *            specified category will be downloaded, otherwise all
+     *            artefacts for each category will be downloaded
      * @param categories syndication feed categories to download, refer to
-     *                   https://www.healthterminologies.gov.au/specs/v2/conformant-server-apps/syndication-api/syndication-
-     *                   feed
+     *            https://www.healthterminologies.gov.au/specs/v2/conformant-server-apps/syndication-api/syndication-
+     *            feed
      * @return a Map containing all the requests categories and a List of
      *         {@link DownloadResult}s, one for each aretfact in the feed matching
      *         the categories provided and latestOnly setting
-     * @throws JDOMException                  if the syndication feed cannot be
-     *                                        parsed
-     * @throws IOException                    if an error occurs trying to get the
-     *                                        feed or its contents
-     * @throws NoSuchAlgorithmException       if the SHA256 algorithm can't be
-     *                                        loaded
+     * @throws JDOMException if the syndication feed cannot be
+     *             parsed
+     * @throws IOException if an error occurs trying to get the
+     *             feed or its contents
+     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be
+     *             loaded
      * @throws HashValidationFailureException if the downloaded file's SHA256
-     *                                        doesn't match the hash specified in
-     *                                        the feed
+     *             doesn't match the hash specified in
+     *             the feed
      */
     public Map<String, List<DownloadResult>> download(boolean latestOnly, String... categories)
-            throws JDOMException, IOException, NoSuchAlgorithmException, HashValidationFailureException {
+            throws IOException, NoSuchAlgorithmException, HashValidationFailureException {
         NctsFeedReader feedReader = new NctsFeedReader(feedUrl.toString());
         NctsFileDownloader downloader = new NctsFileDownloader(tokenUrl, clientId, clientSecret);
 
@@ -122,15 +149,15 @@ public class SyndicationClient {
      * @param categories
      * @return {@link Map} containing one {@link DownloadResult} for each specified
      *         category.
-     * @throws JDOMException                  if the syndication feed cannot be
-     *                                        parsed
-     * @throws IOException                    if an error occurs trying to get the
-     *                                        feed or its contents
-     * @throws NoSuchAlgorithmException       if the SHA256 algorithm can't be
-     *                                        loaded
+     * @throws JDOMException if the syndication feed cannot be
+     *             parsed
+     * @throws IOException if an error occurs trying to get the
+     *             feed or its contents
+     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be
+     *             loaded
      * @throws HashValidationFailureException if the downloaded file's SHA256
-     *                                        doesn't match the hash specified in
-     *                                        the feed
+     *             doesn't match the hash specified in
+     *             the feed
      */
     public Map<String, DownloadResult> downloadLatestFromCategories(String... categories)
             throws NoSuchAlgorithmException, JDOMException, IOException, HashValidationFailureException {
@@ -157,24 +184,77 @@ public class SyndicationClient {
      * @param category
      * @return a single {@link DownloadResult} for the requested latest file in the
      *         category
-     * @throws JDOMException                  if the syndication feed cannot be
-     *                                        parsed
-     * @throws IOException                    if an error occurs trying to get the
-     *                                        feed or its contents
-     * @throws NoSuchAlgorithmException       if the SHA256 algorithm can't be
-     *                                        loaded
+     * @throws JDOMException if the syndication feed cannot be
+     *             parsed
+     * @throws IOException if an error occurs trying to get the
+     *             feed or its contents
+     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be
+     *             loaded
      * @throws HashValidationFailureException if the downloaded file's SHA256
-     *                                        doesn't match the hash specified in
-     *                                        the feed
+     *             doesn't match the hash specified in
+     *             the feed
      */
     public DownloadResult downloadLatest(String category)
             throws NoSuchAlgorithmException, JDOMException, IOException, HashValidationFailureException {
         Map<String, DownloadResult> downloadResults = downloadLatestFromCategories(category);
         if (downloadResults.keySet().size() != 1 || !downloadResults.keySet().iterator().next().equals(category)) {
             throw new SyndicationFeedException(
-                    "Expected only 1 category " + category + " but encountered " + downloadResults.keySet());
+                "Expected only 1 category " + category + " but encountered " + downloadResults.keySet());
         }
 
         return downloadResults.get(category);
+    }
+
+    public URI getFeedUrl() {
+        return feedUrl;
+    }
+
+    public SyndicationClient setFeedUrl(String feedUrl) {
+        return setFeedUrl(URI.create(feedUrl));
+    }
+
+    public SyndicationClient setFeedUrl(URI feedUrl) {
+        this.feedUrl = feedUrl;
+        return this;
+    }
+
+    public URI getTokenUrl() {
+        return tokenUrl;
+    }
+
+    public SyndicationClient setTokenUrl(String tokenUrl) {
+        return setTokenUrl(URI.create(tokenUrl));
+    }
+
+    public SyndicationClient setTokenUrl(URI tokenUrl) {
+        this.tokenUrl = tokenUrl;
+        return this;
+    }
+
+    public File getOutputDirectory() {
+        return outputDirectory;
+    }
+
+    public SyndicationClient setOutputDirectory(File outputDirectory) {
+        this.outputDirectory = outputDirectory;
+        return this;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public SyndicationClient setClientId(String clientId) {
+        this.clientId = clientId;
+        return this;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public SyndicationClient setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+        return this;
     }
 }

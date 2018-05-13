@@ -13,13 +13,11 @@ import org.apache.maven.plugins.annotations.Parameter;
  */
 @Mojo(name = "download-syndication-artefact", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class DownloadSyndicationArtefactMojo extends AbstractMojo {
-    public static final String TOKEN_URL = "https://api.healthterminologies.gov.au/oauth2/token";
-    public static final String FEED_URL = "https://api.healthterminologies.gov.au/syndication/v1/syndication.xml";
 
-    @Parameter(property = "synd.url", defaultValue = FEED_URL)
+    @Parameter(property = "synd.url", defaultValue = SyndicationClient.FEED_URL)
     String feedUrl;
 
-    @Parameter(property = "synd.token.url", defaultValue = TOKEN_URL)
+    @Parameter(property = "synd.token.url", defaultValue = SyndicationClient.TOKEN_URL)
     String tokenUrl;
 
     @Parameter(required = true)
@@ -31,21 +29,24 @@ public class DownloadSyndicationArtefactMojo extends AbstractMojo {
     @Parameter(defaultValue = "true")
     boolean latestOnly;
 
-    @Parameter(required = true)
+    @Parameter
     String clientId;
 
-    @Parameter(required = true)
+    @Parameter
     String clientSecret;
+
+    SyndicationClient client = new SyndicationClient();
 
     @Override
     public void execute() throws MojoExecutionException {
         try {
-
-            SyndicationClient client = new SyndicationClient(feedUrl, tokenUrl, outputDirectory, clientId,
-                    clientSecret);
+            client.setFeedUrl(feedUrl)
+                .setTokenUrl(tokenUrl)
+                .setOutputDirectory(outputDirectory)
+                .setClientId(clientId)
+                .setClientSecret(clientSecret);
 
             client.download(latestOnly, categories);
-
         } catch (Exception e) {
             throw new MojoExecutionException("Failed reading syndication feed", e);
         }

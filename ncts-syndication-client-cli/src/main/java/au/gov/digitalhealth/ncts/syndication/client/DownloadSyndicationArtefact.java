@@ -2,7 +2,6 @@ package au.gov.digitalhealth.ncts.syndication.client;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.cli.CommandLine;
@@ -12,7 +11,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.jdom2.JDOMException;
 
 import au.gov.digitalhealth.ncts.syndication.client.exception.HashValidationFailureException;
 
@@ -31,8 +29,15 @@ public class DownloadSyndicationArtefact {
     private static final String TOKEN_URL_OPTION = "token";
     private static final String FEED_URL_OPTION = "feed";
 
-    public static void main(String[] args) throws URISyntaxException, NoSuchAlgorithmException, JDOMException,
-            IOException, HashValidationFailureException {
+    static SyndicationClient client = new SyndicationClient();
+
+    /**
+     * Private constructor - this is intended to be a main method only class
+     */
+    private DownloadSyndicationArtefact() {}
+
+    public static void main(String[] args)
+            throws NoSuchAlgorithmException, IOException, HashValidationFailureException {
         String feedUrl;
         String tokenUrl;
         File outputDirectory;
@@ -59,17 +64,21 @@ public class DownloadSyndicationArtefact {
                 }
                 categories = line.getOptionValues(CATEGORY_OPTION);
                 latestOnly = line.hasOption(LATEST_ONLY_OPTION);
-                clientId = line.getOptionValue(CLIENT_ID_OPTION);
-                clientSecret = line.getOptionValue(CLIENT_SECRET_OPTION);
+                clientId = line.getOptionValue(CLIENT_ID_OPTION, null);
+                clientSecret = line.getOptionValue(CLIENT_SECRET_OPTION, null);
 
-                SyndicationClient client =
-                        new SyndicationClient(feedUrl, tokenUrl, outputDirectory, clientId, clientSecret);
+                client.setFeedUrl(feedUrl)
+                    .setTokenUrl(tokenUrl)
+                    .setOutputDirectory(outputDirectory)
+                    .setClientId(clientId)
+                    .setClientSecret(clientSecret);
 
                 client.download(latestOnly, categories);
             }
         } catch (ParseException exp) {
             System.err.println("Invalid arguments:" + exp.getMessage());
             printHelp(options);
+            throw new IllegalArgumentException("Invalid arguments", exp);
         }
     }
 
@@ -137,7 +146,6 @@ public class DownloadSyndicationArtefact {
                 .desc(
                     "Client id from the client credentials to use when authenticating to download entries")
                 .hasArg()
-                .required(true)
                 .build());
 
         options.addOption(
@@ -146,7 +154,6 @@ public class DownloadSyndicationArtefact {
                 .desc(
                     "Secret for the client id specified from the client credentials to use when authenticating to download entries")
                 .hasArg()
-                .required(true)
                 .build());
         return options;
     }

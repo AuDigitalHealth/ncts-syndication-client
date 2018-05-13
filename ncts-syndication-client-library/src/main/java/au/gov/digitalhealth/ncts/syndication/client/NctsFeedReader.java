@@ -41,10 +41,15 @@ public class NctsFeedReader {
      *             valid XML
      * @throws IOException if the document at the feedUrl cannot be read
      */
-    public NctsFeedReader(String feedUrl) throws JDOMException, IOException {
+    public NctsFeedReader(String feedUrl) throws IOException {
         logger.info(() -> "Initialising NctsFeedReader from feed " + feedUrl);
         SAXBuilder saxBuilder = new SAXBuilder();
-        Document doc = saxBuilder.build(feedUrl);
+        Document doc = null;
+        try {
+            doc = saxBuilder.build(feedUrl);
+        } catch (JDOMException e) {
+            throw new SyndicationFeedException("Cannot parse syndication feed", e);
+        }
 
         Element rootElement = doc.getRootElement();
         List<Element> feedEntries = rootElement.getChildren("entry", ATOM_NAMESPACE);
