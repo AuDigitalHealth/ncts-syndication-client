@@ -3,7 +3,6 @@ package au.gov.digitalhealth.ncts.syndication.client;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,18 +18,15 @@ import org.jdom2.input.SAXBuilder;
 
 import au.gov.digitalhealth.ncts.syndication.client.exception.SyndicationFeedException;
 
-import de.skuzzle.semantic.Version;
-import de.skuzzle.semantic.Version.VersionFormatException;
-
 /**
  * Class that reads an NCTS Atom feed and presents it as {@link Entry} objects
  * organised by category.
  */
 public class NctsFeedReader {
-    private static final String SNOMED_VERSION_REGEXP = "http://snomed.info/sct/(\\d+)/version/(\\d+)";
+    static final String SNOMED_VERSION_REGEXP = "http://snomed.info/sct/(\\d+)/version/(\\d+)";
     private static final Logger logger = Logger.getLogger(NctsFeedReader.class.getName());
     private static final Namespace NCTS_NAMESPACE = Namespace
-            .getNamespace("http://ns.electronichealth.net.au/ncts/syndication/asf/extensions/1.0.0");
+        .getNamespace("http://ns.electronichealth.net.au/ncts/syndication/asf/extensions/1.0.0");
     private static final Namespace ATOM_NAMESPACE = Namespace.getNamespace("http://www.w3.org/2005/Atom");
 
     private Map<String, Set<Entry>> entries = new HashMap<>();
@@ -42,8 +38,8 @@ public class NctsFeedReader {
      * 
      * @param feedUrl the URL of the NCTS syndication feed to read
      * @throws JDOMException if the document at the feedUrl cannot be parsed as
-     *                       valid XML
-     * @throws IOException   if the document at the feedUrl cannot be read
+     *             valid XML
+     * @throws IOException if the document at the feedUrl cannot be read
      */
     public NctsFeedReader(String feedUrl) throws JDOMException, IOException {
         logger.info(() -> "Initialising NctsFeedReader from feed " + feedUrl);
@@ -65,10 +61,10 @@ public class NctsFeedReader {
             Element entryCategoryElement = entryCategoryElements.iterator().next();
             Element link = getLink(entryElement);
             Entry entry = new Entry(id, link.getAttributeValue("sha256Hash", NCTS_NAMESPACE),
-                    link.getAttributeValue("href"), Long.parseLong(link.getAttributeValue("length")),
-                    entryElement.getChildText("contentItemIdentifier", NCTS_NAMESPACE),
-                    entryElement.getChildText("contentItemVersion", NCTS_NAMESPACE),
-                    entryCategoryElement.getAttributeValue("term"), entryCategoryElement.getAttributeValue("scheme"));
+                link.getAttributeValue("href"), Long.parseLong(link.getAttributeValue("length")),
+                entryElement.getChildText("contentItemIdentifier", NCTS_NAMESPACE),
+                entryElement.getChildText("contentItemVersion", NCTS_NAMESPACE),
+                entryCategoryElement.getAttributeValue("term"), entryCategoryElement.getAttributeValue("scheme"));
 
             addEntry(entry);
         }
@@ -115,10 +111,10 @@ public class NctsFeedReader {
      * 
      * @param categories {@link List} of categories to get from the feed
      * @param latestOnly indicates if only the latest matching {@link Entry} per
-     *                   category should be returned, if true each {@link Set} of
-     *                   {@link Entry} for a category will have only one
-     *                   {@link Entry} otherwise all {@link Entry}s for each
-     *                   category in the feed will be returned
+     *            category should be returned, if true each {@link Set} of
+     *            {@link Entry} for a category will have only one
+     *            {@link Entry} otherwise all {@link Entry}s for each
+     *            category in the feed will be returned
      * @return {@link Map} keyed by the specified categories containing one
      *         {@link Set} per category containine the matching {@link Entry}
      *         objects. Note that if a category is specified but does not occur in
@@ -144,48 +140,8 @@ public class NctsFeedReader {
     }
 
     private Entry getLatestEntry(HashSet<Entry> set) {
-        return set.stream().max(new Comparator<Entry>() {
-            @Override
-            public int compare(Entry o1, Entry o2) {
-                String o1VersionString = o1.getContentItemVersion();
-                String o2VersionString = o2.getContentItemVersion();
-
-                if (o1VersionString.matches(SNOMED_VERSION_REGEXP)) {
-                    String o1Module = o1VersionString.replaceFirst(SNOMED_VERSION_REGEXP, "$1");
-                    o1VersionString = o1VersionString.replaceFirst(SNOMED_VERSION_REGEXP, "$2");
-                    if (!o2VersionString.matches(SNOMED_VERSION_REGEXP)) {
-                        throw new SyndicationFeedException(
-                                "Comparing two entries versions from the feed, one is a SNOMED CT "
-                                        + "version URI, the other isn't. Entries were " + o1 + " and " + o2);
-                    }
-
-                    String o2Module = o2VersionString.replaceFirst(SNOMED_VERSION_REGEXP, "$1");
-
-                    if (!o1Module.equals(o2Module)) {
-                        throw new SyndicationFeedException(
-                                "Comparing two entries versions from the feed with SNOMED CT "
-                                        + "version URIs with mismatching modules " + o1Module + " and " + o2Module
-                                        + ". Entries were " + o1 + " and " + o2);
-                    }
-                    o2VersionString = o2VersionString.replaceFirst("http://snomed.info/sct/\\d+/version/(\\d+)", "$1");
-                }
-
-                if (o1VersionString.matches("\\d+") && o2VersionString.matches("\\d+")) {
-                    return o1VersionString.compareTo(o2VersionString);
-                }
-
-                try {
-                    Version o1Version = Version.parseVersion(o1VersionString);
-                    Version o2Version = Version.parseVersion(o2VersionString);
-                    return o1Version.compareTo(o2Version);
-                } catch (VersionFormatException e) {
-                    throw new SyndicationFeedException(
-                            "Latest entry cannot be determined, version strings for entries are not pure numbers"
-                                    + " (string of digits) or semantic versioning. Entries were " + o1 + " and " + o2,
-                            e);
-                }
-            }
-        }).orElseThrow(() -> new SyndicationFeedException("No latest entry for set " + set));
+        return set.stream().max(new NctsEntryVersionComparator()).orElseThrow(
+            () -> new SyndicationFeedException("No latest entry for set " + set));
     }
 
     private Element getLink(Element entry) {
@@ -193,7 +149,7 @@ public class NctsFeedReader {
 
         if (links.size() != 1) {
             throw new SyndicationFeedException(
-                    "Entry " + entry.getChild("id", ATOM_NAMESPACE) + " does not have exactly one link");
+                "Entry " + entry.getChild("id", ATOM_NAMESPACE) + " does not have exactly one link");
         }
         return links.iterator().next();
     }
