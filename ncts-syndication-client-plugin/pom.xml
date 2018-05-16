@@ -1,17 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.github.dionmcm</groupId>
+		<groupId>au.gov.digitalhealth</groupId>
 		<artifactId>ncts-syndication-client</artifactId>
 		<version>0.0.6-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
-
 	<artifactId>ncts-syndication-client-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>NCTS Syndication Client Maven Mojo</name>
 	<description>Maven Mojo for downloading content from the National Clinical Terminology Service's syndication feed</description>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -19,7 +18,7 @@
 			<version>3.5.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.dionmcm</groupId>
+			<groupId>au.gov.digitalhealth</groupId>
 			<artifactId>ncts-syndication-client-library</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -29,8 +28,17 @@
 			<version>3.5</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
 	<reporting>
 		<plugins>
 			<plugin>
@@ -40,7 +48,6 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -73,6 +80,10 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

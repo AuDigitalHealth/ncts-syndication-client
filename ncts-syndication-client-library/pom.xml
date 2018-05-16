@@ -2,17 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.github.dionmcm</groupId>
+		<groupId>au.gov.digitalhealth</groupId>
 		<artifactId>ncts-syndication-client</artifactId>
 		<version>0.0.6-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
-
 	<artifactId>ncts-syndication-client-library</artifactId>
 	<packaging>jar</packaging>
 	<name>NCTS Syndication Client Java library</name>
 	<description>Java library for downloading artefacts from the NCTS</description>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.jdom</groupId>
@@ -58,11 +56,9 @@
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
-			<version>6.8</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -73,7 +69,12 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+			</plugin>
+
 		</plugins>
 	</build>
-
 </project>

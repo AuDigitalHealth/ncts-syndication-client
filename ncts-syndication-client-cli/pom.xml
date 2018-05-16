@@ -1,20 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.github.dionmcm</groupId>
+		<groupId>au.gov.digitalhealth</groupId>
 		<artifactId>ncts-syndication-client</artifactId>
 		<version>0.0.6-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
-
 	<artifactId>ncts-syndication-client-cli</artifactId>
 	<packaging>jar</packaging>
 	<name>NCTS Syndication Client CLI</name>
 	<description>CLI for downloading artefacts from the NCTS</description>
-
 	<dependencies>
 		<dependency>
-			<groupId>com.github.dionmcm</groupId>
+			<groupId>au.gov.digitalhealth</groupId>
 			<artifactId>ncts-syndication-client-library</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -23,8 +22,19 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>3.6</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -40,7 +50,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.github.dionmcm.ncts.syndication.client.DownloadSyndicationArtefact</mainClass>
+							<mainClass>au.gov.digitalhealth.ncts.syndication.client.DownloadSyndicationArtefact</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -49,15 +59,22 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
+						<id>make-assembly</id>
+						<!-- this is used for inheritance merges -->
+						<phase>package</phase>
+						<!-- bind to the packaging phase -->
 						<goals>
 							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+			</plugin>
+
 		</plugins>
 	</build>
-
 </project>
