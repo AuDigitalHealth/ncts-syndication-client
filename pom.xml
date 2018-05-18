@@ -4,7 +4,7 @@
 	<groupId>au.gov.digitalhealth</groupId>
 	<artifactId>ncts-syndication-client</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>NCTS Syndication Client Parent POM</name>
 	<description>Parent POM for Java library, Maven Mojo and CLI for downloading content from the National Clinical Terminology Service's syndication feed</description>
 	<url>https://github.com/dionmcm/ncts-syndication-client</url>
@@ -134,8 +134,7 @@
 				<gpg.executable>gpg</gpg.executable>
 				<gpg.keyname>${env.GPG_KEYNAME}</gpg.keyname>
 				<gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-				<gpg.defaultKeyring>false</gpg.defaultKeyring>
-				<gpg.publicKeyring>${env.GPG_DIR}/pubring.gpg</gpg.publicKeyring>
+				<gpg.defaultKeyring>true</gpg.defaultKeyring>
 			</properties>
 			<build>
 				<plugins>

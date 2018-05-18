@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.jdom2.JDOMException;
-
 import au.gov.digitalhealth.ncts.syndication.client.exception.HashValidationFailureException;
 import au.gov.digitalhealth.ncts.syndication.client.exception.SyndicationClientInitialisationException;
 import au.gov.digitalhealth.ncts.syndication.client.exception.SyndicationFeedException;
@@ -53,6 +51,7 @@ public class SyndicationClient {
      * Constructs a new client defaulting the token URL to {@link #TOKEN_URL} and
      * the feed URL to {@link #FEED_URL} with no authentication.
      * 
+     * @param outputDirectory directory to download resources to
      */
     public SyndicationClient(File outputDirectory) {
         this(outputDirectory, null, null);
@@ -108,8 +107,7 @@ public class SyndicationClient {
      * @return a Map containing all the requests categories and a List of
      *         {@link DownloadResult}s, one for each aretfact in the feed matching
      *         the categories provided and latestOnly setting
-     * @throws JDOMException if the syndication feed cannot be
-     *             parsed
+     * 
      * @throws IOException if an error occurs trying to get the
      *             feed or its contents
      * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be
@@ -146,11 +144,12 @@ public class SyndicationClient {
      * <p>
      * See {@link #download(boolean, String...)} for more details.
      * 
-     * @param categories
+     * @param categories syndication feed categories to download, refer to
+     *            https://www.healthterminologies.gov.au/specs/v2/conformant-server-apps/syndication-api/syndication-
+     *            feed
      * @return {@link Map} containing one {@link DownloadResult} for each specified
      *         category.
-     * @throws JDOMException if the syndication feed cannot be
-     *             parsed
+     * 
      * @throws IOException if an error occurs trying to get the
      *             feed or its contents
      * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be
@@ -160,7 +159,7 @@ public class SyndicationClient {
      *             the feed
      */
     public Map<String, DownloadResult> downloadLatestFromCategories(String... categories)
-            throws NoSuchAlgorithmException, JDOMException, IOException, HashValidationFailureException {
+            throws NoSuchAlgorithmException, IOException, HashValidationFailureException {
         Map<String, DownloadResult> result = new HashMap<>();
         Map<String, List<DownloadResult>> downloadResults = download(true, categories);
         for (String category : downloadResults.keySet()) {
@@ -181,11 +180,11 @@ public class SyndicationClient {
      * <p>
      * See {@link #download(boolean, String...)} for more details.
      * 
-     * @param category
+     * @param category syndication feed catagory to download, refer to
+     *            https://www.healthterminologies.gov.au/specs/v2/conformant-server-apps/syndication-api/syndication-
+     *            feed
      * @return a single {@link DownloadResult} for the requested latest file in the
      *         category
-     * @throws JDOMException if the syndication feed cannot be
-     *             parsed
      * @throws IOException if an error occurs trying to get the
      *             feed or its contents
      * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be
@@ -195,7 +194,7 @@ public class SyndicationClient {
      *             the feed
      */
     public DownloadResult downloadLatest(String category)
-            throws NoSuchAlgorithmException, JDOMException, IOException, HashValidationFailureException {
+            throws NoSuchAlgorithmException, IOException, HashValidationFailureException {
         Map<String, DownloadResult> downloadResults = downloadLatestFromCategories(category);
         if (downloadResults.keySet().size() != 1 || !downloadResults.keySet().iterator().next().equals(category)) {
             throw new SyndicationFeedException(

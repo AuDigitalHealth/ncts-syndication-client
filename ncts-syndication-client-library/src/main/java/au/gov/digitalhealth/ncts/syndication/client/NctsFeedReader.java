@@ -37,8 +37,7 @@ public class NctsFeedReader {
      * will be thrown.
      * 
      * @param feedUrl the URL of the NCTS syndication feed to read
-     * @throws JDOMException if the document at the feedUrl cannot be parsed as
-     *             valid XML
+     * 
      * @throws IOException if the document at the feedUrl cannot be read
      */
     public NctsFeedReader(String feedUrl) throws IOException {

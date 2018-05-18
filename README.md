@@ -63,7 +63,7 @@ The library can be downloaded from Maven Central as a dependency
 <dependency>
     <groupId>au.gov.digitalhealth</groupId>
     <artifactId>ncts-syndication-client-library</artifactId>
-    <version>0.0.5</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -113,7 +113,7 @@ A simple example is
     <plugin>
       <groupId>au.gov.digitalhealth</groupId>
       <artifactId>ncts-syndication-client</artifactId>
-      <version>0.0.5</version>
+      <version>1.0.0</version>
       <configuration>
         <outputDirectory>/tmp</outputDirectory>
         <categories>
@@ -136,7 +136,7 @@ For the complete parameter set as an example
     <plugin>
       <groupId>au.gov.digitalhealth</groupId>
       <artifactId>ncts-syndication-client</artifactId>
-      <version>0.0.5</version>
+      <version>1.0.0</version>
       <configuration>
         <synd.url>https://api.healthterminologies.gov.au/syndication/v1/syndication.xml</synd.url>
         <synd.token.url>https://api.healthterminologies.gov.au/oauth2/token</synd.token.url>
@@ -157,11 +157,11 @@ For the complete parameter set as an example
 ## Using the client from the command line
 
 The project produces a runnable JAR file you can
-[download from maven central here](https://search.maven.org/remotecontent?filepath=com/github/dionmcm/ncts-syndication-client-cli/0.0.5/ncts-syndication-client-cli-0.0.5-jar-with-dependencies.jar)
+[download from maven central here](https://search.maven.org/remotecontent?filepath=au/gov/digitalhealth/ncts-syndication-client-cli/1.0.0/ncts-syndication-client-cli-1.0.0-jar-with-dependencies.jar)
 and run with
 
 ```
-java -jar ncts-syndication-client-0.0.5-jar-with-dependencies.jar
+java -jar ncts-syndication-client-1.0.0-jar-with-dependencies.jar
 ```
 
 The CLI version uses
