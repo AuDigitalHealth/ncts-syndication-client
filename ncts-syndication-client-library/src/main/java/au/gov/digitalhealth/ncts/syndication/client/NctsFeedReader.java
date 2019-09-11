@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import java.util.stream.Collectors;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -137,6 +138,54 @@ public class NctsFeedReader {
             if (categorySet.contains(category)) {
                 HashSet<Entry> set = new HashSet<>();
                 set.addAll(entries.get(category));
+                if (latestOnly) {
+                    set.retainAll(Arrays.asList(getLatestEntry(set)));
+                }
+                matchingEntries.put(category, set);
+            }
+        }
+
+        return matchingEntries;
+    }
+
+    /**
+     * Gets {@link Entry} objects from the feed in the specified categories and content item
+     * identifiers.
+     * <p>
+     * The response object is a {@link Map} keyed by the categories specified. Each
+     * category in the {@link Map} will have a {@link Set} of {@link Entry} objects
+     * that are in the feed with that category. If latestOnly is set to true each
+     * {@link Set} of {@link Entry} will contain only one {@link Entry} being the
+     * one with the largest content item version for the category, otherwise the
+     * {@link Set} will contain all {@link Entry} objects for the category.
+     * <p>
+     * Only categories found to exist in the feed will be returned as keys in the
+     * response {@link Map}.
+     *
+     * @param categories {@link List} of categories to get from the feed
+     * @param latestOnly indicates if only the latest matching {@link Entry} per
+     *            category should be returned, if true each {@link Set} of
+     *            {@link Entry} for a category will have only one
+     *            {@link Entry} otherwise all {@link Entry}s for each
+     *            category in the feed will be returned
+     * @return {@link Map} keyed by the specified categories containing one
+     *         {@link Set} per category containine the matching {@link Entry}
+     *         objects. Note that if a category is specified but does not occur in
+     *         the feed content the category will not appear as a key in the
+     *         returned map.
+     */
+    public Map<String, Set<Entry>> getMatchingEntriesByContentItemId(boolean latestOnly,
+        List<String> categories, List<String> contentItemIds) {
+
+        Map<String, Set<Entry>> matchingEntries = new HashMap<>();
+        Set<String> categorySet = new HashSet<>(categories);
+
+        for (String category : entries.keySet()) {
+            if (categorySet.contains(category)) {
+                Set<Entry> filteredEntries = entries.get(category).stream()
+                    .filter(entry -> contentItemIds.contains(entry.getContentItemIdentifier()))
+                    .collect(Collectors.toSet());
+                HashSet<Entry> set = new HashSet<>(filteredEntries);
                 if (latestOnly) {
                     set.retainAll(Arrays.asList(getLatestEntry(set)));
                 }

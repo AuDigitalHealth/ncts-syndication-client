@@ -115,16 +115,28 @@ public class NctsEntryVersionComparatorTest {
             "Negative result expected for greater entries");
     }
 
-    @Test(description = "compare entries with unsupported version format", expectedExceptions = {
-            UnsupportedVersionFormatException.class })
-    public void compareUnsupportedVersionFormat() {
-        comparator.compare(createEntry("1.0"), createEntry("1.0.0"));
+    @Test(description = "compare entries with two component version numbers, ala LOINC")
+    public void compareTwoComponentVersions() {
+        assertEquals(comparator.compare(createEntry("2.64"), createEntry("2.64")), 0,
+            "Zero result expected for equal entries");
+
+        assertTrue(comparator.compare(createEntry("2.65"), createEntry("2.64")) > 0,
+            "Positive result expected for greater entries");
+
+        assertTrue(comparator.compare(createEntry("1.25"), createEntry("3.1")) < 0,
+            "Negative result expected for greater entries");
     }
 
     @Test(description = "compare entries with mismatching component identifiers", expectedExceptions = {
             MismatchingContentItemIdentifierException.class })
     public void compareMismatchingComponentIdentifier() {
         comparator.compare(createEntry(TEST_SCT_VERSION, "123"), createEntry(TEST_SCT_VERSION, "456"));
+    }
+
+    @Test(description = "compare entries with sem ver and two component version", expectedExceptions = {
+        MismatchingEntryVersionFormatException.class })
+    public void compareMismatchingTwoComponentAndSemVer() {
+        comparator.compare(createEntry("1.0"), createEntry("1.0.0"));
     }
 
     @Test(description = "compare entries with mismatching formats - SCT URI and sem ver", expectedExceptions = {

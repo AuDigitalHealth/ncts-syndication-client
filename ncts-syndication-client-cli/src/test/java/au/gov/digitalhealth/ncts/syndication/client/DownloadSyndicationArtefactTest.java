@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.security.NoSuchAlgorithmException;
 
+import java.util.Arrays;
+import java.util.Collections;
 import org.easymock.EasyMockSupport;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -62,6 +64,46 @@ public class DownloadSyndicationArtefactTest extends EasyMockSupport {
         replayAll();
 
         DownloadSyndicationArtefact.main(new String[] { "-latest", "-category", "foo" });
+
+        verifyAll();
+    }
+
+    @Test(description = "category and contentItemId parameters")
+    public void categoryTestAndContentItemId() throws NoSuchAlgorithmException, IOException, HashValidationFailureException {
+        expect(DownloadSyndicationArtefact.client.setFeedUrl(SyndicationClient.FEED_URL))
+            .andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.setTokenUrl(SyndicationClient.TOKEN_URL))
+            .andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.setOutputDirectory(new File(System.getProperty("user.dir"))))
+            .andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.setClientId(null)).andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.setClientSecret(null)).andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.downloadByCategoryAndContentItemId(
+            Collections.singletonList("foo"), Arrays.asList("someId", "someOtherId"), false)).andReturn(null);
+        replayAll();
+
+        DownloadSyndicationArtefact.main(new String[] { "-category", "foo", "-contentItemId",
+            "someId", "-contentItemId", "someOtherId" });
+
+        verifyAll();
+    }
+
+    @Test(description = "category and contentItemId parameters, latest only")
+    public void categoryTestContentItemIdAndLatest() throws NoSuchAlgorithmException, IOException, HashValidationFailureException {
+        expect(DownloadSyndicationArtefact.client.setFeedUrl(SyndicationClient.FEED_URL))
+            .andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.setTokenUrl(SyndicationClient.TOKEN_URL))
+            .andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.setOutputDirectory(new File(System.getProperty("user.dir"))))
+            .andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.setClientId(null)).andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.setClientSecret(null)).andReturn(DownloadSyndicationArtefact.client);
+        expect(DownloadSyndicationArtefact.client.downloadByCategoryAndContentItemId(
+            Collections.singletonList("foo"), Arrays.asList("someId", "someOtherId"), true)).andReturn(null);
+        replayAll();
+
+        DownloadSyndicationArtefact.main(new String[] { "-latest", "-category", "foo",
+            "-contentItemId", "someId", "-contentItemId", "someOtherId" });
 
         verifyAll();
     }
