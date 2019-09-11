@@ -168,13 +168,23 @@ public class NctsFileDownloader {
         try (FileInputStream fis = new FileInputStream(out)) {
             existingSha256 = DigestUtils.sha256Hex(fis);
         }
-
+        // Guard against the scenario where File.length() returns 0L, due to the file being non-
+        // existent.
+        if (out.length() == 0L) {
+            throw new RuntimeException(
+                "Attempted to get length of file that does not exist: " + out.getAbsolutePath());
+        }
         return sha256AndLengthMatch(entry, out.length(), existingSha256);
 
     }
 
     private boolean sha256AndLengthMatch(Entry entry, Long length, String existingSha256) {
-        return length == entry.getLength() && existingSha256.equals(entry.getSha256());
+        // If length was not specified in the feed, it is left out of the comparison.
+        if (entry.getLength() == null) {
+            return existingSha256.equals(entry.getSha256());
+        } else {
+            return length.equals(entry.getLength()) && existingSha256.equals(entry.getSha256());
+        }
     }
 
     private String getBearerTokenFromAuthServer() {

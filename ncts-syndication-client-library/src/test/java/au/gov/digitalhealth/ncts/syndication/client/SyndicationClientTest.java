@@ -52,7 +52,7 @@ public class SyndicationClientTest {
     private static final String serverDir = "target/test-classes/"; // where the server resources are
     private static final File outDir = new File("target/client-output"); // where the client under test will download to
     private static final String[] serverFileList = { // That are contained in the test resources folder
-            "blue1.r2", "blue2.r2", "red1.r2", "purple1.r2", "purple2.r2", "green1.r2" };
+            "blue1.r2", "blue2.r2", "blue3.r2", "red1.r2", "purple1.r2", "purple2.r2", "green1.r2" };
 
     private SyndicationClient testClient;
     private ClientAndServer mockServer;
@@ -68,20 +68,23 @@ public class SyndicationClientTest {
 
         List<String> downloadedFiles = getDownloadedFileNames(blueResults);
 
-        assertEquals(downloadedFiles.size(), 2, "2 files should be reported by the client as downloaded");
+        assertEquals(downloadedFiles.size(), 3, "3 files should be reported by the client as downloaded");
 
         // assert that all blue results in list
         assertTrue(downloadedFiles.contains("blue1.r2"),
                 "blue1.r2 file should be reported by the client as downloaded");
         assertTrue(downloadedFiles.contains("blue2.r2"),
                 "blue2.r2 file should be reported by the client as downloaded");
+        assertTrue(downloadedFiles.contains("blue3.r2"),
+            "blue3.r2 file should be reported by the client as downloaded");
 
         // assert files not missing from local directory
         List<String> filesInClientFolder = getFilenamesInDownloadsDirectory();
-        assertEquals(filesInClientFolder.size(), 2,
-                "exactly 2 files should be in the download directory for the client");
+        assertEquals(filesInClientFolder.size(), 3,
+                "exactly 3 files should be in the download directory for the client");
         assertTrue(filesInClientFolder.contains("blue1.r2"), "blue1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("blue2.r2"), "blue2.r2 file should be in the download directory");
+        assertTrue(filesInClientFolder.contains("blue3.r2"), "blue3.r2 file should be in the download directory");
     }
 
     @Test(priority = 2, groups = "downloading", description = "Tests that the client accurately downloads the latest file in a single category", enabled = true)
@@ -212,21 +215,24 @@ public class SyndicationClientTest {
 
         // test the purple category
         downloadedFiles = getDownloadedFileNames(result.get(SCT_RF2_BLUE_CATEGORY));
-        assertEquals(downloadedFiles.size(), 2, "2 blue files should be reported by the client as downloaded");
+        assertEquals(downloadedFiles.size(), 3, "3 blue files should be reported by the client as downloaded");
         assertTrue(downloadedFiles.contains("blue1.r2"),
                 "blue1.r2 file should be reported by the client as downloaded");
         assertTrue(downloadedFiles.contains("blue2.r2"),
                 "blue2.r2 file should be reported by the client as downloaded");
+        assertTrue(downloadedFiles.contains("blue3.r2"),
+            "blue3.r2 file should be reported by the client as downloaded");
 
         // assert files not missing from local directory
         List<String> filesInClientFolder = getFilenamesInDownloadsDirectory();
-        assertEquals(filesInClientFolder.size(), 5,
-                "exactly 5 files should be in the download directory for the client");
+        assertEquals(filesInClientFolder.size(), 6,
+                "exactly 6 files should be in the download directory for the client");
         assertTrue(filesInClientFolder.contains("purple1.r2"), "purple1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("purple2.r2"), "purple2.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("red1.r2"), "red1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("blue1.r2"), "blue1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("blue2.r2"), "blue2.r2 file should be in the download directory");
+        assertTrue(filesInClientFolder.contains("blue3.r2"), "blue3.r2 file should be in the download directory");
     }
 
     @Test(priority = 10, groups = "authentication", description = "Tests that Authentication Exception is thrown when token can not be obtained", enabled = true, expectedExceptions = AuthenticationException.class)

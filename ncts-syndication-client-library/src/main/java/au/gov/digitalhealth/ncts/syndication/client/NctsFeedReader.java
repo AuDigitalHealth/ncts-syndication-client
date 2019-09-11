@@ -64,11 +64,15 @@ public class NctsFeedReader {
 
             Element entryCategoryElement = entryCategoryElements.iterator().next();
             Element link = getLink(entryElement);
-            Entry entry = new Entry(id, link.getAttributeValue("sha256Hash", NCTS_NAMESPACE),
-                link.getAttributeValue("href"), Long.parseLong(link.getAttributeValue("length")),
+            Entry entry = new Entry(id,
+                link.getAttributeValue("sha256Hash", NCTS_NAMESPACE),
+                link.getAttributeValue("href"),
+                getLengthFromLink(link),
                 entryElement.getChildText("contentItemIdentifier", NCTS_NAMESPACE),
                 entryElement.getChildText("contentItemVersion", NCTS_NAMESPACE),
-                entryCategoryElement.getAttributeValue("term"), entryCategoryElement.getAttributeValue("scheme"));
+                entryCategoryElement.getAttributeValue("term"),
+                entryCategoryElement.getAttributeValue("scheme")
+            );
 
             addEntry(entry);
         }
@@ -156,6 +160,22 @@ public class NctsFeedReader {
                 "Entry " + entry.getChild("id", ATOM_NAMESPACE) + " does not have exactly one link");
         }
         return links.iterator().next();
+    }
+
+    private Long getLengthFromLink(Element link) {
+        String lengthString = link.getAttributeValue("length");
+        if (lengthString == null) {
+            return null;
+        } else if (lengthString.isEmpty()) {
+            logger.warning("Length attribute in link element is empty, ignoring");
+        }
+        Long lengthValue = null;
+        try {
+            lengthValue = Long.parseLong(lengthString);
+        } catch (NumberFormatException e) {
+            logger.warning("Unable to parse length from link element, ignoring: " + lengthString);
+        }
+        return lengthValue;
     }
 
     private void addEntry(Entry entry) {

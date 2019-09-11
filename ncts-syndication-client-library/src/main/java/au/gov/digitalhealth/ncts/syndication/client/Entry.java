@@ -10,7 +10,7 @@ public class Entry {
     private final String id;
     private final String sha256;
     private final String url;
-    private final long length;
+    private final Long length;
     private final String contentItemIdentifier;
     private final String contentItemVersion;
     private final String category;
@@ -18,7 +18,7 @@ public class Entry {
 
     private File file;
 
-    public Entry(String id, String sha256, String url, long length, String contentItemIdentifier,
+    public Entry(String id, String sha256, String url, Long length, String contentItemIdentifier,
             String contentItemVersion, String category, String categoryScheme) {
         this.id = id;
         this.sha256 = sha256;
@@ -42,7 +42,7 @@ public class Entry {
         return url;
     }
 
-    public long getLength() {
+    public Long getLength() {
         return length;
     }
 

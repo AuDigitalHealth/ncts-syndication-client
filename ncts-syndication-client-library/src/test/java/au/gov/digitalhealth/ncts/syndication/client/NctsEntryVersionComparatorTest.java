@@ -150,7 +150,7 @@ public class NctsEntryVersionComparatorTest {
     }
 
     private Entry createEntry(String version, String contentItemIdentifier) {
-        return new Entry(UUID.randomUUID().toString(), "sha256", "url", 123, contentItemIdentifier, version,
+        return new Entry(UUID.randomUUID().toString(), "sha256", "url", 123L, contentItemIdentifier, version,
             "category", "categoryScheme");
     }
 }
