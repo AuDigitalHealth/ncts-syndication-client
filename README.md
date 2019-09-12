@@ -138,8 +138,8 @@ For the complete parameter set as an example
       <artifactId>ncts-syndication-client</artifactId>
       <version>1.1.0</version>
       <configuration>
-        <synd.url>https://api.healthterminologies.gov.au/syndication/v1/syndication.xml</synd.url>
-        <synd.token.url>https://api.healthterminologies.gov.au/oauth2/token</synd.token.url>
+        <feedUrl>https://api.healthterminologies.gov.au/syndication/v1/syndication.xml</feedUrl>
+        <tokenUrl>https://api.healthterminologies.gov.au/oauth2/token</tokenUrl>
         <outputDirectory>/tmp</outputDirectory>
         <categories>
           <param>SCT_RF2_FULL</param>
