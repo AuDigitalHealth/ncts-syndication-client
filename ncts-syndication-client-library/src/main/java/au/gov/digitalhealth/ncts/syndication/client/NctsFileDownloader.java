@@ -172,7 +172,7 @@ public class NctsFileDownloader {
         // existent.
         if (out.length() == 0L) {
             throw new RuntimeException(
-                "Attempted to get length of file that does not exist: " + out.getAbsolutePath());
+                "File is zero length, or does not exist: " + out.getAbsolutePath());
         }
         return sha256AndLengthMatch(entry, out.length(), existingSha256);
 
