@@ -2,6 +2,7 @@ package au.gov.digitalhealth.ncts.syndication.client;
 
 import java.io.File;
 
+import java.util.Arrays;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -26,6 +27,9 @@ public class DownloadSyndicationArtefactMojo extends AbstractMojo {
     @Parameter(required = true)
     String[] categories;
 
+    @Parameter
+    String[] contentItemIds;
+
     @Parameter(defaultValue = "true")
     boolean latestOnly;
 
@@ -46,7 +50,12 @@ public class DownloadSyndicationArtefactMojo extends AbstractMojo {
                 .setClientId(clientId)
                 .setClientSecret(clientSecret);
 
-            client.download(latestOnly, categories);
+            if (contentItemIds == null) {
+                client.download(latestOnly, categories);
+            } else {
+                client.downloadByCategoryAndContentItemId(Arrays.asList(categories),
+                    Arrays.asList(contentItemIds), latestOnly);
+            }
         } catch (Exception e) {
             throw new MojoExecutionException("Failed reading syndication feed", e);
         }

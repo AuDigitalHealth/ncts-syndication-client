@@ -54,6 +54,26 @@
     <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
   </entry>
 
+  <!-- blue3 does not have a length attribute in its <link> element -->
+
+  <entry>
+    <title>SNOMED CT-AU 30 November 2017 (RF2 FULL)</title>
+    <link rel="alternate" type="application/text" href="http://localhost:1080/blue3.r2" ncts:sha256Hash="3b0986fa9a8ddcf7f1600dd4276aa601ebee9fa2492fdb7142582c49c47fd4e8" />
+    <category term="SCT_RF2_BLUE" label="SNOMED CT RF2 Blue" scheme="http://ns.electronichealth.net.au/ncts/syndication/asf/scheme/1.0.0" />
+    <author>
+      <name>Australian Digital Health Agency</name>
+      <uri>http://www.digitalhealth.gov.au</uri>
+      <email>help@digitalhealth.gov.au</email>
+    </author>
+    <id>urn:uuid:555555</id>
+    <rights>Copyright 2017 Australian Digital Health Agency. This content contains information which is protected by copyright. All Rights Reserved. No part of this work may be reproduced or used in any form or by any means - graphic, electronic, or mechanical, including photocopying, recording, taping, or information storage and retrieval systems - without the permission of the Australian Digital Health Agency. IHTSDO (SNOMED CT) This material includes SNOMED Clinical Terms (TM) (SNOMED CT (R)) which is used by permission of the International Health Terminology Standards Development Organisation (IHTSDO). All rights reserved. SNOMED CT (R) was originally created by The College of American Pathologists. "SNOMED" and "SNOMED CT" are registered trademarks of the IHTSDO, (http://www.ihtsdo.org/).</rights>
+    <updated>2017-11-16T00:25:01Z</updated>
+    <published>2017-11-16T00:25:01Z</published>
+    <summary>SNOMED CT-AU is the Australian extension to the Systematized Nomenclature of Medicine, Clinical Terms (SNOMED CT), incorporating all Australian-developed terminology including the Australian Medicines Terminology (AMT) along with the core international data. SNOMED CT-AU provides local variations and customisations of terms relevant to the Australian healthcare sector for implementation in Australian clinical IT systems.</summary>
+    <ncts:contentItemIdentifier>http://snomed.info/sct/32506021000036107</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171031</ncts:contentItemVersion>
+  </entry>
+
   <entry>
     <title>SNOMED CT-AU 30 November 2017 (RF2 FULL)</title>
     <link rel="alternate" type="application/text" href="http://localhost:1080/red1.r2" length="11" ncts:sha256Hash="63640264849a87c90356129d99ea165e37aa5fabc1fea46906df1a7ca50db492" />
@@ -132,7 +152,53 @@
     <ncts:contentItemVersion>http://snomed.info/sct/32506021000036107/version/20171130</ncts:contentItemVersion>
   </entry>
 
+  <entry>
+    <title>
+      SNOMED CT-AU 31 March 2019 (Ontoserver Binary Index)
+    </title>
+    <link rel="alternate" type="application/zip" href="http://localhost:1080/binary1" length="23" ncts:sha256Hash="ce6e69355606ff4defcbf28da982c6533be57563c0b04e63215e90996af82159"/>
+    <category term="BINARY" label="Binary Index" scheme="http://ontoserver.csiro.au/syndication/rf2/1.7.0"/>
+    <author>
+      <name>Ontoserver</name>
+      <uri>http://ontoserver.csiro.au</uri>
+      <email>enquiries@aehrc.com</email>
+    </author>
+    <id>urn:uuid:6d97f5b0-349d-435a-af36-27a62f0633d4</id>
+    <updated>2019-03-18T07:41:31Z</updated>
+    <published>2019-03-18T07:41:31Z</published>
+    <summary>
+      Binary Index of the SNOMED CT Australian Extension 31 March 2019 for use with Ontoserver
+    </summary>
+    <ncts:contentItemIdentifier>http://snomed.info/sct</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>
+      http://snomed.info/sct/32506021000036107/version/20190331
+    </ncts:contentItemVersion>
+  </entry>
 
+  <entry>
+    <title>Binary Index LOINC v2.65</title>
+    <link rel="alternate" type="application/zip" href="http://localhost:1080/binary2" length="17" ncts:sha256Hash="be177eb8f06b2019c85087ddbc599f244c6e7d010c35c5ad5055cfdd20c2cef1" />
+    <category term="BINARY" label="Binary Index" scheme="http://ontoserver.csiro.au/syndication/loinc/2.0.0" />
+    <author>
+      <name>Ontoserver</name>
+    </author>
+    <id>urn:uuid:8a468783-9478-487f-9deb-c8eb62e56064</id>
+    <updated>2019-08-01T22:42:16Z</updated>
+    <ncts:contentItemIdentifier>http://loinc.org</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>2.65</ncts:contentItemVersion>
+  </entry>
 
+  <entry>
+    <title>Binary Index LOINC v2.64</title>
+    <link rel="alternate" type="application/zip" href="http://localhost:1080/binary3" length="32" ncts:sha256Hash="10e71685051810b5178855237ce15b468ecc1f51d19985b4db1f7ae4fff97ce2" />
+    <category term="BINARY" label="Binary Index" scheme="http://ontoserver.csiro.au/syndication/loinc/2.0.0" />
+    <author>
+      <name>Ontoserver</name>
+    </author>
+    <id>urn:uuid:1a6ed0df-a3ac-4a6f-a96a-4e36b1be4842</id>
+    <updated>2019-07-01T22:42:16Z</updated>
+    <ncts:contentItemIdentifier>http://loinc.org</ncts:contentItemIdentifier>
+    <ncts:contentItemVersion>2.64</ncts:contentItemVersion>
+  </entry>
 
 </feed>

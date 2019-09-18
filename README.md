@@ -63,7 +63,7 @@ The library can be downloaded from Maven Central as a dependency
 <dependency>
     <groupId>au.gov.digitalhealth</groupId>
     <artifactId>ncts-syndication-client-library</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -113,12 +113,12 @@ A simple example is
     <plugin>
       <groupId>au.gov.digitalhealth</groupId>
       <artifactId>ncts-syndication-client</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
       <configuration>
         <outputDirectory>/tmp</outputDirectory>
         <categories>
-          <category>SCT_RF2_FULL</category>
-          <category>SCT_RF2_DELTA</category>
+          <param>SCT_RF2_FULL</param>
+          <param>SCT_RF2_DELTA</param>
         </categories>
         <clientId>YOUR CLIENT ID</clientId>
         <clientSecret>YOUR CLIENT SECRET</clientSecret>
@@ -136,15 +136,18 @@ For the complete parameter set as an example
     <plugin>
       <groupId>au.gov.digitalhealth</groupId>
       <artifactId>ncts-syndication-client</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
       <configuration>
-        <synd.url>https://api.healthterminologies.gov.au/syndication/v1/syndication.xml</synd.url>
-        <synd.token.url>https://api.healthterminologies.gov.au/oauth2/token</synd.token.url>
+        <feedUrl>https://api.healthterminologies.gov.au/syndication/v1/syndication.xml</feedUrl>
+        <tokenUrl>https://api.healthterminologies.gov.au/oauth2/token</tokenUrl>
         <outputDirectory>/tmp</outputDirectory>
         <categories>
-          <category>SCT_RF2_FULL</category>
-          <category>SCT_RF2_DELTA</category>
+          <param>SCT_RF2_FULL</param>
+          <param>SCT_RF2_DELTA</param>
         </categories>
+        <contentItemIds>
+          <param>http://snomed.info/sct</param>
+        </contentItemIds>
         <latestOnly>true</latestOnly>
         <clientId>YOUR CLIENT ID</clientId>
         <clientSecret>YOUR CLIENT SECRET</clientSecret>
@@ -157,11 +160,11 @@ For the complete parameter set as an example
 ## Using the client from the command line
 
 The project produces a runnable JAR file you can
-[download from maven central here](https://search.maven.org/remotecontent?filepath=au/gov/digitalhealth/ncts-syndication-client-cli/1.0.0/ncts-syndication-client-cli-1.0.0-jar-with-dependencies.jar)
+[download from maven central here](https://search.maven.org/remotecontent?filepath=au/gov/digitalhealth/ncts-syndication-client-cli/1.1.0/ncts-syndication-client-cli-1.1.0-jar-with-dependencies.jar)
 and run with
 
 ```
-java -jar ncts-syndication-client-1.0.0-jar-with-dependencies.jar
+java -jar ncts-syndication-client-1.1.0-jar-with-dependencies.jar
 ```
 
 The CLI version uses
@@ -178,6 +181,10 @@ usage: java
                                  appear in the term attribute of the
                                  category elements in the feed, for
                                  example 'SCT_RF2_FULL'
+ -contentItemId <arg>            Content item identifier to download
+                                 entries for, these appear in the
+                                 contentItemIdentifier element in the
+                                 feed, for example 'http://loinc.org'
  -feed,--feed-url <arg>          URL of the NCTS syndication feed,
                                  defaults to
                                  https://api.healthterminologies.gov.au/sy

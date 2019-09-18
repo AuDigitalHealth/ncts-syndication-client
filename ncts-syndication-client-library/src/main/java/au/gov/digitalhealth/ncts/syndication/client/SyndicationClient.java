@@ -140,6 +140,63 @@ public class SyndicationClient {
     }
 
     /**
+     * Downloads the specified categories artefacts to the client's download
+     * directory specified in the client's constructor. If files are already present
+     * in the download directory the SHA256 will be tested, and if the local copy's
+     * SHA256 does not match the feed the item will be downloaded over the top of
+     * the existing local copy. SHA256 hashes are tested for each download and if
+     * they fail an exception is thrown and the client aborts.
+     * <p>
+     * Entries must have a category that matches one of the supplied categories, and a
+     * contentItemIdentifier that matches one of the supplied contentItemId values.
+     *
+     * @param categories syndication feed categories to download, refer to
+     *            https://www.healthterminologies.gov.au/specs/v2/conformant-server-apps/syndication-api/syndication-
+     *            feed
+     * @param categories contentItemIdentifier values to download, refer to
+     *            https://www.healthterminologies.gov.au/specs/v2/conformant-server-apps/syndication-api/syndication-
+     *            feed
+     * @param latestOnly if true only the latest artefact version from each
+     *            specified category will be downloaded, otherwise all
+     *            artefacts for each category will be downloaded
+     * @return a Map containing all the requests categories and a List of
+     *         {@link DownloadResult}s, one for each aretfact in the feed matching
+     *         the categories provided and latestOnly setting
+     *
+     * @throws IOException if an error occurs trying to get the
+     *             feed or its contents
+     * @throws NoSuchAlgorithmException if the SHA256 algorithm can't be
+     *             loaded
+     * @throws HashValidationFailureException if the downloaded file's SHA256
+     *             doesn't match the hash specified in
+     *             the feed
+     */
+    public Map<String, List<DownloadResult>> downloadByCategoryAndContentItemId(
+        List<String> categories, List<String> contentItemIds, boolean latestOnly)
+        throws IOException, HashValidationFailureException, NoSuchAlgorithmException {
+        NctsFeedReader feedReader = new NctsFeedReader(feedUrl.toString());
+        NctsFileDownloader downloader = new NctsFileDownloader(tokenUrl, clientId, clientSecret);
+
+        Map<String, Set<Entry>> matchingEntries = feedReader.getMatchingEntriesByContentItemId(
+            latestOnly, categories, contentItemIds);
+
+        Map<String, List<DownloadResult>> result = new HashMap<>();
+        if (matchingEntries.isEmpty()) {
+            logger.warning(() -> "No entries found to download for specified categories " + categories);
+        } else {
+            for (String category : matchingEntries.keySet()) {
+                List<DownloadResult> downloads = new ArrayList<>();
+                for (Entry entry : matchingEntries.get(category)) {
+                    downloads.add(downloader.downloadEntry(entry, outputDirectory));
+                }
+                result.put(category, downloads);
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Convenience method to download the latest file for the specified categories.
      * <p>
      * See {@link #download(boolean, String...)} for more details.

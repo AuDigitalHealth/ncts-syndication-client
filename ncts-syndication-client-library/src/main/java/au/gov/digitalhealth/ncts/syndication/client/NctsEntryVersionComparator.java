@@ -15,6 +15,7 @@ import de.skuzzle.semantic.Version.VersionFormatException;
  * <ul>
  * <li>a natural number (positive integer)</li>
  * <li>a semantic version - see <a href="https://semver.org/">https://semver.org/</a></li>
+ * <li>a two-component variant of a semantic version, ala the LOINC version number</li>
  * <li>a SNOMED CT version URI - see
  * <a href="https://confluence.ihtsdotools.org/display/DOCURI/2.1+URIs+for+Editions+and+Versions">https://confluence.
  * ihtsdotools.org/display/DOCURI/2.1+URIs+for+Editions+and+Versions</a></li>
@@ -22,6 +23,9 @@ import de.skuzzle.semantic.Version.VersionFormatException;
  * Note that SNOMED CT version URIs for both entries must have the same module identifier.
  */
 public class NctsEntryVersionComparator implements Comparator<Entry> {
+
+    private static final String TWO_COMPONENT_VERSION_REGEXP = "\\d+\\.\\d+";
+
     @Override
     public int compare(Entry o1, Entry o2) {
         String o1VersionString = o1.getContentItemVersion();
@@ -65,9 +69,25 @@ public class NctsEntryVersionComparator implements Comparator<Entry> {
             }
         }
 
+        // Check if one or both of the versions are in the two component version syntax. If only one
+        // of them is, throw an error. If they both are, append a `.0` to make them valid semantic
+        // versions, which can then be compared using that method.
+        boolean matchesTwoComponent1 = o1VersionString.matches(TWO_COMPONENT_VERSION_REGEXP);
+        boolean matchesTwoComponent2 = o2VersionString.matches(TWO_COMPONENT_VERSION_REGEXP);
+        String transformedO1VersionString = o1VersionString;
+        String transformedO2VersionString = o2VersionString;
+        if (matchesTwoComponent1 ^ matchesTwoComponent2) {
+            throw new MismatchingEntryVersionFormatException(
+                "Unable to compare two component version number with semantic version number: "
+                    + o1VersionString + ", " + o2VersionString);
+        } else if (matchesTwoComponent1 && matchesTwoComponent2) {
+            transformedO1VersionString += ".0";
+            transformedO2VersionString += ".0";
+        }
+
         try {
-            Version o1Version = Version.parseVersion(o1VersionString);
-            Version o2Version = Version.parseVersion(o2VersionString);
+            Version o1Version = Version.parseVersion(transformedO1VersionString);
+            Version o2Version = Version.parseVersion(transformedO2VersionString);
             return o1Version.compareTo(o2Version);
         } catch (VersionFormatException e) {
             throw new UnsupportedVersionFormatException(

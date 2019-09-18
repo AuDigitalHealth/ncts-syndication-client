@@ -131,9 +131,11 @@ public class NctsFileDownloader {
             throws NoSuchAlgorithmException, IOException, HashValidationFailureException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         HttpClientBuilder builder = HttpClients.custom();
-        builder.addInterceptorFirst((HttpRequest request, HttpContext context) -> {
-            request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getBearerTokenFromAuthServer());
-        });
+        if (clientId != null & clientSecret != null) {
+            builder.addInterceptorFirst((HttpRequest request, HttpContext context) -> {
+                request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getBearerTokenFromAuthServer());
+            });
+        }
         try (DigestOutputStream dos = new DigestOutputStream(new BufferedOutputStream(new FileOutputStream(out)),
                 digest);
                 CloseableHttpClient httpClient = builder.build();
@@ -168,13 +170,23 @@ public class NctsFileDownloader {
         try (FileInputStream fis = new FileInputStream(out)) {
             existingSha256 = DigestUtils.sha256Hex(fis);
         }
-
+        // Guard against the scenario where File.length() returns 0L, due to the file being non-
+        // existent.
+        if (out.length() == 0L) {
+            throw new RuntimeException(
+                "File is zero length, or does not exist: " + out.getAbsolutePath());
+        }
         return sha256AndLengthMatch(entry, out.length(), existingSha256);
 
     }
 
     private boolean sha256AndLengthMatch(Entry entry, Long length, String existingSha256) {
-        return length == entry.getLength() && existingSha256.equals(entry.getSha256());
+        // If length was not specified in the feed, it is left out of the comparison.
+        if (entry.getLength() == null) {
+            return existingSha256.equals(entry.getSha256());
+        } else {
+            return length.equals(entry.getLength()) && existingSha256.equals(entry.getSha256());
+        }
     }
 
     private String getBearerTokenFromAuthServer() {

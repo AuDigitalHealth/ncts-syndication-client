@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import java.util.stream.Collectors;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -64,11 +65,15 @@ public class NctsFeedReader {
 
             Element entryCategoryElement = entryCategoryElements.iterator().next();
             Element link = getLink(entryElement);
-            Entry entry = new Entry(id, link.getAttributeValue("sha256Hash", NCTS_NAMESPACE),
-                link.getAttributeValue("href"), Long.parseLong(link.getAttributeValue("length")),
+            Entry entry = new Entry(id,
+                link.getAttributeValue("sha256Hash", NCTS_NAMESPACE),
+                link.getAttributeValue("href"),
+                getLengthFromLink(link),
                 entryElement.getChildText("contentItemIdentifier", NCTS_NAMESPACE),
                 entryElement.getChildText("contentItemVersion", NCTS_NAMESPACE),
-                entryCategoryElement.getAttributeValue("term"), entryCategoryElement.getAttributeValue("scheme"));
+                entryCategoryElement.getAttributeValue("term"),
+                entryCategoryElement.getAttributeValue("scheme")
+            );
 
             addEntry(entry);
         }
@@ -143,6 +148,54 @@ public class NctsFeedReader {
         return matchingEntries;
     }
 
+    /**
+     * Gets {@link Entry} objects from the feed in the specified categories and content item
+     * identifiers.
+     * <p>
+     * The response object is a {@link Map} keyed by the categories specified. Each
+     * category in the {@link Map} will have a {@link Set} of {@link Entry} objects
+     * that are in the feed with that category. If latestOnly is set to true each
+     * {@link Set} of {@link Entry} will contain only one {@link Entry} being the
+     * one with the largest content item version for the category, otherwise the
+     * {@link Set} will contain all {@link Entry} objects for the category.
+     * <p>
+     * Only categories found to exist in the feed will be returned as keys in the
+     * response {@link Map}.
+     *
+     * @param categories {@link List} of categories to get from the feed
+     * @param latestOnly indicates if only the latest matching {@link Entry} per
+     *            category should be returned, if true each {@link Set} of
+     *            {@link Entry} for a category will have only one
+     *            {@link Entry} otherwise all {@link Entry}s for each
+     *            category in the feed will be returned
+     * @return {@link Map} keyed by the specified categories containing one
+     *         {@link Set} per category containine the matching {@link Entry}
+     *         objects. Note that if a category is specified but does not occur in
+     *         the feed content the category will not appear as a key in the
+     *         returned map.
+     */
+    public Map<String, Set<Entry>> getMatchingEntriesByContentItemId(boolean latestOnly,
+        List<String> categories, List<String> contentItemIds) {
+
+        Map<String, Set<Entry>> matchingEntries = new HashMap<>();
+        Set<String> categorySet = new HashSet<>(categories);
+
+        for (String category : entries.keySet()) {
+            if (categorySet.contains(category)) {
+                Set<Entry> filteredEntries = entries.get(category).stream()
+                    .filter(entry -> contentItemIds.contains(entry.getContentItemIdentifier()))
+                    .collect(Collectors.toSet());
+                HashSet<Entry> set = new HashSet<>(filteredEntries);
+                if (latestOnly) {
+                    set.retainAll(Arrays.asList(getLatestEntry(set)));
+                }
+                matchingEntries.put(category, set);
+            }
+        }
+
+        return matchingEntries;
+    }
+
     private Entry getLatestEntry(HashSet<Entry> set) {
         return set.stream().max(new NctsEntryVersionComparator()).orElseThrow(
             () -> new SyndicationFeedException("No latest entry for set " + set));
@@ -156,6 +209,22 @@ public class NctsFeedReader {
                 "Entry " + entry.getChild("id", ATOM_NAMESPACE) + " does not have exactly one link");
         }
         return links.iterator().next();
+    }
+
+    private Long getLengthFromLink(Element link) {
+        String lengthString = link.getAttributeValue("length");
+        if (lengthString == null) {
+            return null;
+        } else if (lengthString.isEmpty()) {
+            logger.warning("Length attribute in link element is empty, ignoring");
+        }
+        Long lengthValue = null;
+        try {
+            lengthValue = Long.parseLong(lengthString);
+        } catch (NumberFormatException e) {
+            logger.warning("Unable to parse length from link element, ignoring: " + lengthString);
+        }
+        return lengthValue;
     }
 
     private void addEntry(Entry entry) {

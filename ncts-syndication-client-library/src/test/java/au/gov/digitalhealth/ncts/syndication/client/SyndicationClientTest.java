@@ -18,11 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -45,6 +41,8 @@ public class SyndicationClientTest {
     private static final String SCT_RF2_RED_CATEGORY = "SCT_RF2_RED";
     private static final String SCT_RF2_PURPLE_CATEGORY = "SCT_RF2_PURPLE";
     private static final String SCT_RF2_BLUE_CATEGORY = "SCT_RF2_BLUE";
+    private static final String BINARY_CATEGORY = "BINARY";
+    private static final String LOINC_CONTENT_ITEM_IDENTIFIER = "http://loinc.org";
     private static final String feedURL = "http://localhost:1080/syndication.xml";
     private static final String tokenURL = "http://localhost:1080/mockToken";
     private static final String clientID = "test";
@@ -52,7 +50,8 @@ public class SyndicationClientTest {
     private static final String serverDir = "target/test-classes/"; // where the server resources are
     private static final File outDir = new File("target/client-output"); // where the client under test will download to
     private static final String[] serverFileList = { // That are contained in the test resources folder
-            "blue1.r2", "blue2.r2", "red1.r2", "purple1.r2", "purple2.r2", "green1.r2" };
+            "blue1.r2", "blue2.r2", "blue3.r2", "red1.r2", "purple1.r2", "purple2.r2", "green1.r2",
+            "binary1", "binary2", "binary3" };
 
     private SyndicationClient testClient;
     private ClientAndServer mockServer;
@@ -68,20 +67,23 @@ public class SyndicationClientTest {
 
         List<String> downloadedFiles = getDownloadedFileNames(blueResults);
 
-        assertEquals(downloadedFiles.size(), 2, "2 files should be reported by the client as downloaded");
+        assertEquals(downloadedFiles.size(), 3, "3 files should be reported by the client as downloaded");
 
         // assert that all blue results in list
         assertTrue(downloadedFiles.contains("blue1.r2"),
                 "blue1.r2 file should be reported by the client as downloaded");
         assertTrue(downloadedFiles.contains("blue2.r2"),
                 "blue2.r2 file should be reported by the client as downloaded");
+        assertTrue(downloadedFiles.contains("blue3.r2"),
+            "blue3.r2 file should be reported by the client as downloaded");
 
         // assert files not missing from local directory
         List<String> filesInClientFolder = getFilenamesInDownloadsDirectory();
-        assertEquals(filesInClientFolder.size(), 2,
-                "exactly 2 files should be in the download directory for the client");
+        assertEquals(filesInClientFolder.size(), 3,
+                "exactly 3 files should be in the download directory for the client");
         assertTrue(filesInClientFolder.contains("blue1.r2"), "blue1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("blue2.r2"), "blue2.r2 file should be in the download directory");
+        assertTrue(filesInClientFolder.contains("blue3.r2"), "blue3.r2 file should be in the download directory");
     }
 
     @Test(priority = 2, groups = "downloading", description = "Tests that the client accurately downloads the latest file in a single category", enabled = true)
@@ -212,24 +214,82 @@ public class SyndicationClientTest {
 
         // test the purple category
         downloadedFiles = getDownloadedFileNames(result.get(SCT_RF2_BLUE_CATEGORY));
-        assertEquals(downloadedFiles.size(), 2, "2 blue files should be reported by the client as downloaded");
+        assertEquals(downloadedFiles.size(), 3, "3 blue files should be reported by the client as downloaded");
         assertTrue(downloadedFiles.contains("blue1.r2"),
                 "blue1.r2 file should be reported by the client as downloaded");
         assertTrue(downloadedFiles.contains("blue2.r2"),
                 "blue2.r2 file should be reported by the client as downloaded");
+        assertTrue(downloadedFiles.contains("blue3.r2"),
+            "blue3.r2 file should be reported by the client as downloaded");
 
         // assert files not missing from local directory
         List<String> filesInClientFolder = getFilenamesInDownloadsDirectory();
-        assertEquals(filesInClientFolder.size(), 5,
-                "exactly 5 files should be in the download directory for the client");
+        assertEquals(filesInClientFolder.size(), 6,
+                "exactly 6 files should be in the download directory for the client");
         assertTrue(filesInClientFolder.contains("purple1.r2"), "purple1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("purple2.r2"), "purple2.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("red1.r2"), "red1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("blue1.r2"), "blue1.r2 file should be in the download directory");
         assertTrue(filesInClientFolder.contains("blue2.r2"), "blue2.r2 file should be in the download directory");
+        assertTrue(filesInClientFolder.contains("blue3.r2"), "blue3.r2 file should be in the download directory");
     }
 
-    @Test(priority = 10, groups = "authentication", description = "Tests that Authentication Exception is thrown when token can not be obtained", enabled = true, expectedExceptions = AuthenticationException.class)
+    @Test(priority = 9, groups = "downloading", enabled = true)
+    public void downloadsFilesUsingCategoryAndContentItemId()
+        throws IOException, HashValidationFailureException, NoSuchAlgorithmException {
+        testClient = new SyndicationClient(feedURL, tokenURL, outDir, clientID, secret);
+        Map<String, List<DownloadResult>> result = testClient.downloadByCategoryAndContentItemId(
+            Collections.singletonList(BINARY_CATEGORY),
+            Collections.singletonList(LOINC_CONTENT_ITEM_IDENTIFIER),
+            false);
+
+        List<DownloadResult> loincBinaryResults = result.get(BINARY_CATEGORY);
+        List<String> downloadedFiles = getDownloadedFileNames(loincBinaryResults);
+
+        // Check that two files were downloaded.
+        assertEquals(downloadedFiles.size(), 2, "2 files should be reported by the client as downloaded");
+
+        // Check that the LOINC binaries were downloaded.
+        assertTrue(downloadedFiles.contains("binary2"),
+            "binary2 file should be reported by the client as downloaded");
+        assertTrue(downloadedFiles.contains("binary3"),
+            "binary3 file should be reported by the client as downloaded");
+
+        // Check that the files are in the download directory.
+        List<String> filesInClientFolder = getFilenamesInDownloadsDirectory();
+        assertEquals(filesInClientFolder.size(), 2,
+            "exactly 2 files should be in the download directory for the client");
+        assertTrue(filesInClientFolder.contains("binary2"), "binary2");
+        assertTrue(filesInClientFolder.contains("binary3"), "binary3");
+    }
+
+    @Test(priority = 10, groups = "downloading", enabled = true)
+    public void downloadsLatestUsingCategoryAndContentItemId()
+        throws IOException, HashValidationFailureException, NoSuchAlgorithmException {
+        testClient = new SyndicationClient(feedURL, tokenURL, outDir, clientID, secret);
+        Map<String, List<DownloadResult>> result = testClient.downloadByCategoryAndContentItemId(
+            Collections.singletonList(BINARY_CATEGORY),
+            Collections.singletonList(LOINC_CONTENT_ITEM_IDENTIFIER),
+            true);
+
+        List<DownloadResult> loincBinaryResults = result.get(BINARY_CATEGORY);
+        List<String> downloadedFiles = getDownloadedFileNames(loincBinaryResults);
+
+        // Check that two files were downloaded.
+        assertEquals(downloadedFiles.size(), 1, "1 file should be reported by the client as downloaded");
+
+        // Check that the latest LOINC binary was downloaded.
+        assertTrue(downloadedFiles.contains("binary2"),
+            "binary2 file should be reported by the client as downloaded");
+
+        // Check that the file is in the download directory.
+        List<String> filesInClientFolder = getFilenamesInDownloadsDirectory();
+        assertEquals(filesInClientFolder.size(), 1,
+            "exactly 1 files should be in the download directory for the client");
+        assertTrue(filesInClientFolder.contains("binary2"), "binary2");
+    }
+
+    @Test(priority = 11, groups = "authentication", description = "Tests that Authentication Exception is thrown when token can not be obtained", enabled = true, expectedExceptions = AuthenticationException.class)
     public void cannotGetTokenException() throws IOException, URISyntaxException, NoSuchAlgorithmException,
             JDOMException, HashValidationFailureException {
         testClient = new SyndicationClient(feedURL, "http://doesn't-work.com", outDir, clientID, secret);

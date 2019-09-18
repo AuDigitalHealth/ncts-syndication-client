@@ -9,11 +9,12 @@ public class HashValidationFailureException extends Exception {
     final String hash;
     final long length;
     final String feedHash;
-    final long feedLength;
+    final Long feedLength;
 
-    public HashValidationFailureException(File filePath, String hash, long length, String feedHash, long feedLength) {
+    public HashValidationFailureException(File filePath, String hash, long length, String feedHash, Long feedLength) {
         super("File " + filePath.getAbsolutePath() + " with hash " + hash + " and length " + length
-                + " once downloaded did not match the advertised hash " + feedHash + " and/or length " + feedLength
+                + " once downloaded did not match the advertised hash " + feedHash
+                + (feedLength == null ? "" : " and length " + feedLength)
                 + ". Downloaded file deleted, process aborted.");
         this.filePath = filePath;
         this.hash = hash;

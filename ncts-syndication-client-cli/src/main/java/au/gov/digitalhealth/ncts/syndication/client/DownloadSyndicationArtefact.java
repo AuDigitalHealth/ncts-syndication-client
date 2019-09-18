@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+import java.util.Arrays;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -25,6 +26,7 @@ public class DownloadSyndicationArtefact {
     private static final String CLIENT_ID_OPTION = "id";
     private static final String LATEST_ONLY_OPTION = "latest";
     private static final String CATEGORY_OPTION = "category";
+    private static final String CONTENT_ITEM_ID_OPTION = "contentItemId";
     private static final String OUTPUT_DIRECTORY_OPTION = "out";
     private static final String TOKEN_URL_OPTION = "token";
     private static final String FEED_URL_OPTION = "feed";
@@ -42,6 +44,7 @@ public class DownloadSyndicationArtefact {
         String tokenUrl;
         File outputDirectory;
         String[] categories;
+        String[] contentItemIds;
         boolean latestOnly;
         String clientId;
         String clientSecret;
@@ -63,6 +66,7 @@ public class DownloadSyndicationArtefact {
                     outputDirectory = new File(System.getProperty("user.dir"));
                 }
                 categories = line.getOptionValues(CATEGORY_OPTION);
+                contentItemIds = line.getOptionValues(CONTENT_ITEM_ID_OPTION);
                 latestOnly = line.hasOption(LATEST_ONLY_OPTION);
                 clientId = line.getOptionValue(CLIENT_ID_OPTION, null);
                 clientSecret = line.getOptionValue(CLIENT_SECRET_OPTION, null);
@@ -73,7 +77,12 @@ public class DownloadSyndicationArtefact {
                     .setClientId(clientId)
                     .setClientSecret(clientSecret);
 
-                client.download(latestOnly, categories);
+                if (contentItemIds == null) {
+                    client.download(latestOnly, categories);
+                } else {
+                    client.downloadByCategoryAndContentItemId(Arrays.asList(categories),
+                        Arrays.asList(contentItemIds), latestOnly);
+                }
             }
         } catch (ParseException exp) {
             System.err.println("Invalid arguments:" + exp.getMessage());
@@ -130,6 +139,14 @@ public class DownloadSyndicationArtefact {
                     "Category to download entries for, these appear in the term attribute of the category elements in the feed, for example 'SCT_RF2_FULL'")
                 .numberOfArgs(Option.UNLIMITED_VALUES)
                 .required(true)
+                .build());
+
+        options.addOption(
+            Option.builder(CONTENT_ITEM_ID_OPTION)
+                .desc(
+                    "Content item identifier to download entries for, these appear in the contentItemIdentifier element in the feed, for example 'http://loinc.org'")
+                .numberOfArgs(Option.UNLIMITED_VALUES)
+                .required(false)
                 .build());
 
         options.addOption(
