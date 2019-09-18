@@ -131,9 +131,11 @@ public class NctsFileDownloader {
             throws NoSuchAlgorithmException, IOException, HashValidationFailureException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         HttpClientBuilder builder = HttpClients.custom();
-        builder.addInterceptorFirst((HttpRequest request, HttpContext context) -> {
-            request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getBearerTokenFromAuthServer());
-        });
+        if (clientId != null & clientSecret != null) {
+            builder.addInterceptorFirst((HttpRequest request, HttpContext context) -> {
+                request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getBearerTokenFromAuthServer());
+            });
+        }
         try (DigestOutputStream dos = new DigestOutputStream(new BufferedOutputStream(new FileOutputStream(out)),
                 digest);
                 CloseableHttpClient httpClient = builder.build();
